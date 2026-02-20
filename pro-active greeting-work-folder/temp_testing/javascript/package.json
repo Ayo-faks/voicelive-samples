@@ -1,0 +1,21 @@
+{
+  "name": "voicelive-proactive-test",
+  "version": "1.0.0",
+  "description": "Voice Live Proactive Messages Test - Based on how-to article",
+  "main": "test_proactive_messages.js",
+  "type": "module",
+  "scripts": {
+    "start": "node test_proactive_messages.js",
+    "test:pre-generated": "node test_proactive_messages.js --greeting-mode pre-generated",
+    "test:llm-generated": "node test_proactive_messages.js --greeting-mode llm-generated"
+  },
+  "dependencies": {
+    "@azure/ai-voicelive": "^1.0.0-beta.2",
+    "@azure/core-auth": "^1.5.0",
+    "@azure/identity": "^4.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
