@@ -12,8 +12,8 @@ export const BuiltWithBadge: React.FC = () => (
     <span style={logoStyle}>
       <AIFoundryLogo />
     </span>
-    <span style={textStyle}>Build & deploy AI agents with</span>
-    <span style={brandStyle}>Azure AI Foundry</span>
+    <span style={textStyle}>Built with</span>
+    <span style={brandStyle}>Microsoft Foundry</span>
   </a>
 );
 
