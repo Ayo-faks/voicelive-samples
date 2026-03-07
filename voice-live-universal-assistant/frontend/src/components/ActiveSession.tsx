@@ -62,7 +62,7 @@ const containerStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '100vh',
+  height: '100%',
   boxSizing: 'border-box',
   padding: '24px 24px 0 24px',
 };
