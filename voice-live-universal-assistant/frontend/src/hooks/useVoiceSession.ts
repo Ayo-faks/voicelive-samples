@@ -359,6 +359,6 @@ export function useVoiceSession() {
     azureSpeechLocales,
     sendTextMessage,
     configLoaded,
-    setInputModeRef: (mode: 'voice' | 'text') => { inputModeRef.current = mode; },
+    setInputModeRef: useCallback((mode: 'voice' | 'text') => { inputModeRef.current = mode; }, []),
   };
 }

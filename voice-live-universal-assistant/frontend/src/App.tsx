@@ -79,8 +79,21 @@ const App: React.FC = () => {
   ];
 
   const handleStarterPrompt = (prompt: string) => {
-    if (inputMode === 'text' && isActive) {
-      sendTextMessage(prompt);
+    if (inputMode === 'text') {
+      // Start session if idle, then send message once connected
+      if (isIdle) {
+        setAutoStarted(true);
+        startSession();
+        // Queue the message — sendTextMessage will fire once WS is open
+        const checkAndSend = () => {
+          setTimeout(() => {
+            sendTextMessage(prompt);
+          }, 1500);
+        };
+        checkAndSend();
+      } else {
+        sendTextMessage(prompt);
+      }
     }
   };
 
