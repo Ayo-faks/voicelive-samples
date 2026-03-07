@@ -49,6 +49,7 @@ export function useVoiceSession() {
   const [isCCEnabled, setIsCCEnabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [azureSpeechLocales, setAzureSpeechLocales] = useState<string[]>([]);
+  const [configLoaded, setConfigLoaded] = useState(false);
 
   const wsRef = useRef<WebSocket | null>(null);
   const clientIdRef = useRef<string>(generateClientId());
@@ -82,8 +83,12 @@ export function useVoiceSession() {
           }
           return merged;
         });
+        setConfigLoaded(true);
       })
-      .catch((err) => console.warn('Failed to fetch /config:', err));
+      .catch((err) => {
+        console.warn('Failed to fetch /config:', err);
+        setConfigLoaded(true);
+      });
 
     fetch('/languages')
       .then((res) => res.json())
@@ -312,6 +317,17 @@ export function useVoiceSession() {
     setErrorMessage(null);
   }, []);
 
+  /** Send a text message via Voice Live (conversation.item.create + response.create). */
+  const sendTextMessage = useCallback((text: string) => {
+    if (!text.trim()) return;
+    // Add user transcript immediately for responsive UI
+    setTranscripts((prev) => [
+      ...prev,
+      { role: 'user', text: text.trim(), isFinal: true, timestamp: Date.now() },
+    ]);
+    sendWsMessage('send_text', { text: text.trim() });
+  }, [sendWsMessage]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -338,5 +354,7 @@ export function useVoiceSession() {
     errorMessage,
     dismissError,
     azureSpeechLocales,
+    sendTextMessage,
+    configLoaded,
   };
 }

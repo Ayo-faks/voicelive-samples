@@ -285,6 +285,20 @@ class VoiceLiveHandler:
             except Exception as e:
                 logger.debug(f"[{self.client_id}] No response to cancel: {e}")
 
+    async def send_text(self, text: str) -> None:
+        """Send a text message via Voice Live (conversation.item.create + response.create)."""
+        if self.connection and text.strip():
+            try:
+                await self.connection.conversation.item.create(
+                    item=MessageItem(
+                        role="user",
+                        content=[InputTextContentPart(text=text.strip())],
+                    )
+                )
+                await self.connection.response.create()
+            except Exception as e:
+                logger.error(f"[{self.client_id}] Error sending text: {e}")
+
     async def stop(self) -> None:
         """Gracefully shut down the handler."""
         self.is_running = False

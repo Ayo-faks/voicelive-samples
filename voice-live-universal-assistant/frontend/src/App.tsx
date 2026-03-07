@@ -5,6 +5,8 @@ import { useUrlParams } from './hooks/useUrlParams';
 import type { InputMode } from './hooks/useUrlParams';
 import { TopBar } from './components/TopBar';
 import { ActiveSession } from './components/ActiveSession';
+import { ChatMessages } from './components/ChatMessages';
+import { ChatInput } from './components/ChatInput';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBanner } from './components/ErrorBanner';
 import { BuiltWithBadge } from './components/BuiltWithBadge';
@@ -26,6 +28,8 @@ const App: React.FC = () => {
     errorMessage,
     dismissError,
     azureSpeechLocales,
+    sendTextMessage,
+    configLoaded,
   } = useVoiceSession();
 
   const { theme, setTheme } = useTheme();
@@ -33,18 +37,17 @@ const App: React.FC = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [inputMode, setInputMode] = useState<InputMode>(lockedMode ?? 'voice');
 
-  // Auto-connect on mount once settings are loaded from server
+  // Auto-connect once server config is loaded
   const [autoStarted, setAutoStarted] = useState(false);
   useEffect(() => {
-    if (!autoStarted && state === 'idle' && settings.mode) {
-      // In agent mode, only auto-start if agent config is present
+    if (!autoStarted && state === 'idle' && configLoaded) {
       if (settings.mode === 'agent' && (!settings.agentName?.trim() || !settings.project?.trim())) {
         return;
       }
       setAutoStarted(true);
       startSession();
     }
-  }, [autoStarted, state, settings.mode, settings.agentName, settings.project, startSession]);
+  }, [autoStarted, state, configLoaded, settings.mode, settings.agentName, settings.project, startSession]);
 
   const handleNewThread = () => {
     resetSession();
@@ -86,7 +89,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {isActive && (
+        {isActive && inputMode === 'voice' && (
           <ActiveSession
             state={state}
             transcripts={transcripts}
@@ -97,7 +100,15 @@ const App: React.FC = () => {
             onEndSession={stopSession}
           />
         )}
+
+        {isActive && inputMode === 'text' && (
+          <ChatMessages transcripts={transcripts} />
+        )}
       </div>
+
+      {isActive && inputMode === 'text' && (
+        <ChatInput onSend={sendTextMessage} />
+      )}
 
       <SettingsPanel
         isOpen={settingsOpen}

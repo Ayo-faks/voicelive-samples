@@ -213,6 +213,11 @@ async def _handle_message(client_id: str, message: dict, websocket: WebSocket):
         if handler:
             await handler.send_audio(message.get("data", ""))
 
+    elif msg_type == "send_text":
+        handler = _handlers.get(client_id)
+        if handler:
+            await handler.send_text(message.get("text", ""))
+
     elif msg_type == "interrupt":
         handler = _handlers.get(client_id)
         if handler:

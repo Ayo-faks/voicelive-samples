@@ -1,0 +1,78 @@
+import React, { useRef, useEffect } from 'react';
+import type { TranscriptEntry } from '../types';
+
+interface ChatMessagesProps {
+  transcripts: TranscriptEntry[];
+}
+
+export const ChatMessages: React.FC<ChatMessagesProps> = ({ transcripts }) => {
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [transcripts]);
+
+  if (transcripts.length === 0) {
+    return null;
+  }
+
+  return (
+    <div style={containerStyle}>
+      {transcripts.map((entry, idx) => (
+        <div
+          key={idx}
+          style={{
+            ...bubbleRowStyle,
+            justifyContent: entry.role === 'user' ? 'flex-end' : 'flex-start',
+          }}
+        >
+          <div
+            style={{
+              ...bubbleStyle,
+              ...(entry.role === 'user' ? userBubbleStyle : assistantBubbleStyle),
+              opacity: entry.isFinal ? 1 : 0.7,
+            }}
+          >
+            {entry.text}
+          </div>
+        </div>
+      ))}
+      <div ref={bottomRef} />
+    </div>
+  );
+};
+
+const containerStyle: React.CSSProperties = {
+  flex: 1,
+  overflowY: 'auto',
+  padding: '16px 20px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+};
+
+const bubbleRowStyle: React.CSSProperties = {
+  display: 'flex',
+  width: '100%',
+};
+
+const bubbleStyle: React.CSSProperties = {
+  maxWidth: '75%',
+  padding: '10px 14px',
+  borderRadius: '16px',
+  fontSize: '0.95rem',
+  lineHeight: 1.45,
+  wordBreak: 'break-word',
+};
+
+const userBubbleStyle: React.CSSProperties = {
+  background: 'var(--brand-blue)',
+  color: '#fff',
+  borderBottomRightRadius: '4px',
+};
+
+const assistantBubbleStyle: React.CSSProperties = {
+  background: 'var(--bg-3)',
+  color: 'var(--fg-1)',
+  borderBottomLeftRadius: '4px',
+};
