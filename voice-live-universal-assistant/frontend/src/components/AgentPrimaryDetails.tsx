@@ -1,0 +1,52 @@
+import React from 'react';
+
+interface AgentPrimaryDetailsProps {
+  name: string;
+  description?: string;
+}
+
+/**
+ * Displays agent identity in the idle state — icon, name, and optional description.
+ * Matches the Foundry Portal's AgentPrimaryDetails pattern.
+ */
+export const AgentPrimaryDetails: React.FC<AgentPrimaryDetailsProps> = ({
+  name,
+  description,
+}) => {
+  return (
+    <div style={containerStyle}>
+      <div style={iconStyle}>🤖</div>
+      <h2 style={nameStyle}>{name || 'Voice Assistant'}</h2>
+      {description && <p style={descStyle}>{description}</p>}
+    </div>
+  );
+};
+
+const containerStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '8px',
+  padding: '16px',
+};
+
+const iconStyle: React.CSSProperties = {
+  fontSize: '3rem',
+  lineHeight: 1,
+};
+
+const nameStyle: React.CSSProperties = {
+  fontSize: '1.4rem',
+  fontWeight: 600,
+  color: 'var(--fg-1)',
+  margin: 0,
+  textAlign: 'center',
+};
+
+const descStyle: React.CSSProperties = {
+  fontSize: '0.95rem',
+  color: 'var(--fg-3)',
+  margin: 0,
+  textAlign: 'center',
+  maxWidth: '400px',
+};

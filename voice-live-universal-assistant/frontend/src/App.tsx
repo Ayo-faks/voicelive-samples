@@ -7,6 +7,9 @@ import { TopBar } from './components/TopBar';
 import { ActiveSession } from './components/ActiveSession';
 import { ChatMessages } from './components/ChatMessages';
 import { ChatInput } from './components/ChatInput';
+import { AgentPrimaryDetails } from './components/AgentPrimaryDetails';
+import { StarterMessages } from './components/StarterMessages';
+import { Waves } from './components/Waves';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBanner } from './components/ErrorBanner';
 import { BuiltWithBadge } from './components/BuiltWithBadge';
@@ -62,6 +65,18 @@ const App: React.FC = () => {
 
   const isIdle = state === 'idle' || state === 'ended';
 
+  const starterPrompts = [
+    'Tell me about your capabilities',
+    'What can you help me with?',
+    'How does this work?',
+  ];
+
+  const handleStarterPrompt = (prompt: string) => {
+    if (inputMode === 'text' && isActive) {
+      sendTextMessage(prompt);
+    }
+  };
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ErrorBanner message={errorMessage} onDismiss={dismissError} />
@@ -79,13 +94,16 @@ const App: React.FC = () => {
       <div style={contentStyle}>
         {isIdle && (
           <div style={idleContainerStyle}>
-            <VoiceOrb state="idle" size={160} />
-            <h2 style={idleHeadingStyle}>
-              {settings.mode === 'agent' ? settings.agentName || 'Voice Assistant' : 'Voice Assistant'}
-            </h2>
-            <p style={idleDescStyle}>
-              {state === 'ended' ? 'Session ended. Click + to start a new thread.' : 'Connecting...'}
-            </p>
+            <Waves paused={!isIdle} />
+            <div style={idleContentStyle}>
+              <AgentPrimaryDetails
+                name={settings.mode === 'agent' ? settings.agentName : settings.model || 'Voice Assistant'}
+                description={state === 'ended'
+                  ? 'Session ended. Click + to start a new thread.'
+                  : 'Connecting to Voice Live...'}
+              />
+              <StarterMessages prompts={starterPrompts} onPromptClick={handleStarterPrompt} />
+            </div>
           </div>
         )}
 
@@ -139,20 +157,15 @@ const idleContainerStyle: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   flex: 1,
-  gap: '16px',
+  position: 'relative',
 };
 
-const idleHeadingStyle: React.CSSProperties = {
-  fontSize: '1.5rem',
-  fontWeight: 600,
-  color: 'var(--fg-1)',
-  margin: 0,
-};
-
-const idleDescStyle: React.CSSProperties = {
-  fontSize: '0.95rem',
-  color: 'var(--fg-3)',
-  margin: 0,
+const idleContentStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '24px',
+  zIndex: 1,
 };
 
 export default App;
