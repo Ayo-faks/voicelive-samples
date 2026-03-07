@@ -33,12 +33,16 @@ const App: React.FC = () => {
     azureSpeechLocales,
     sendTextMessage,
     configLoaded,
+    setInputModeRef,
   } = useVoiceSession();
 
   const { theme, setTheme } = useTheme();
   const { lockedMode, isLocked } = useUrlParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [inputMode, setInputMode] = useState<InputMode>(lockedMode ?? 'voice');
+
+  // Keep voice session hook aware of input mode for mic capture gating
+  useEffect(() => { setInputModeRef(inputMode); }, [inputMode, setInputModeRef]);
 
   // Auto-connect once server config is loaded
   const [autoStarted, setAutoStarted] = useState(false);
@@ -53,8 +57,11 @@ const App: React.FC = () => {
   }, [autoStarted, state, configLoaded, settings.mode, settings.agentName, settings.project, startSession]);
 
   const handleNewThread = () => {
+    if (isActive) {
+      stopSession();
+    }
     resetSession();
-    setTimeout(() => startSession(), 0);
+    setTimeout(() => startSession(), 50);
   };
 
   const showModeToggle = !isLocked && !lockedMode;
@@ -125,7 +132,17 @@ const App: React.FC = () => {
       </div>
 
       {isActive && inputMode === 'text' && (
-        <ChatInput onSend={sendTextMessage} />
+        <div style={textModeBottomStyle}>
+          <ChatInput onSend={sendTextMessage} />
+          <button
+            style={endSessionTextStyle}
+            onClick={stopSession}
+            aria-label="End session"
+            title="End session"
+          >
+            ✕ End
+          </button>
+        </div>
       )}
 
       <SettingsPanel
@@ -166,6 +183,27 @@ const idleContentStyle: React.CSSProperties = {
   alignItems: 'center',
   gap: '24px',
   zIndex: 1,
+};
+
+const textModeBottomStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  borderTop: '1px solid var(--border-subtle)',
+  background: 'var(--bg-2)',
+  padding: '0 8px 0 0',
+};
+
+const endSessionTextStyle: React.CSSProperties = {
+  padding: '8px 14px',
+  borderRadius: '8px',
+  border: '1px solid var(--error)',
+  background: 'var(--error-bg-subtle)',
+  color: 'var(--error)',
+  fontSize: '0.85rem',
+  fontWeight: 600,
+  cursor: 'pointer',
+  whiteSpace: 'nowrap',
 };
 
 export default App;

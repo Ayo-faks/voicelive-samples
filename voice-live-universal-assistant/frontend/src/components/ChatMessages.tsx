@@ -16,9 +16,16 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ transcripts }) => {
     return null;
   }
 
+  // Filter: show all finals + only the last non-final (streaming) entry
+  const filtered = transcripts.filter((entry, idx) => {
+    if (entry.isFinal) return true;
+    // Keep non-final only if it's the last entry
+    return idx === transcripts.length - 1;
+  });
+
   return (
     <div style={containerStyle}>
-      {transcripts.map((entry, idx) => (
+      {filtered.map((entry, idx) => (
         <div
           key={idx}
           style={{

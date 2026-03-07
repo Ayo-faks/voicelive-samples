@@ -54,6 +54,7 @@ export function useVoiceSession() {
   const wsRef = useRef<WebSocket | null>(null);
   const clientIdRef = useRef<string>(generateClientId());
   const stateRef = useRef<SessionState>(state);
+  const inputModeRef = useRef<'voice' | 'text'>('voice');
 
   // Keep stateRef in sync so ws.onclose always reads the live value
   useEffect(() => { stateRef.current = state; }, [state]);
@@ -125,10 +126,12 @@ export function useVoiceSession() {
         case 'session_started':
           setSessionId(msg.session_id || '');
           setState('listening');
-          startCapture().catch((err) => {
-            console.error('Mic access failed:', err);
-            setState('ended');
-          });
+          if (inputModeRef.current === 'voice') {
+            startCapture().catch((err) => {
+              console.error('Mic access failed:', err);
+              setState('ended');
+            });
+          }
           break;
 
         case 'audio_data':
@@ -356,5 +359,6 @@ export function useVoiceSession() {
     azureSpeechLocales,
     sendTextMessage,
     configLoaded,
+    setInputModeRef: (mode: 'voice' | 'text') => { inputModeRef.current = mode; },
   };
 }
