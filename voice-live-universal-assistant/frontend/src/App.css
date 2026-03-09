@@ -17,7 +17,7 @@
   --surface: rgba(255, 255, 255, 0.05);
   --surface-overlay: rgba(255, 255, 255, 0.08);
   --control-bar-bg: rgba(0, 0, 0, 0.3);
-  --wave-color: rgba(255, 255, 255, 0.08);
+  --wave-color: rgba(255, 255, 255, 0.05);
   --scrollbar-thumb: rgba(255, 255, 255, 0.15);
   --backdrop: rgba(0, 0, 0, 0.5);
   --error: #ef4444;
@@ -45,7 +45,7 @@
   --surface: rgba(0, 0, 0, 0.03);
   --surface-overlay: rgba(0, 0, 0, 0.05);
   --control-bar-bg: rgba(255, 255, 255, 0.85);
-  --wave-color: #d4d4d4;
+  --wave-color: #e0e0e0;
   --scrollbar-thumb: rgba(0, 0, 0, 0.15);
   --backdrop: rgba(0, 0, 0, 0.3);
   --error: #dc2626;
