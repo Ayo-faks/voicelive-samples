@@ -81,11 +81,17 @@ const App: React.FC = () => {
         {isIdle && configLoaded && (
           <div style={idleContainerStyle}>
             <Waves paused={false} />
-            <div style={idleContentStyle}>
+            {/* Heading area — top of content, not centered */}
+            <div style={headingAreaStyle}>
               <h1 style={agentHeadingStyle}>{formatName(agentDisplayName)}</h1>
               <p style={agentDescStyle}>
-                {settings.mode === 'agent' ? `Agent with ${settings.project || 'Foundry'} project.` : 'Talk like you would to a person. The agent listens and responds.'}
+                {settings.mode === 'agent'
+                  ? (settings.project ? `${formatName(agentDisplayName)} with ${settings.project} project.` : 'Voice agent ready to assist.')
+                  : 'Talk like you would to a person. The agent listens and responds.'}
               </p>
+            </div>
+            {/* Orb + labels + button — vertically centered */}
+            <div style={orbSectionStyle}>
               <VoiceOrb state="idle" size={120} />
               <h2 style={letsTalkStyle}>Let's talk</h2>
               <p style={talkDescStyle}>Talk like you would to a person. The agent listens and responds.</p>
@@ -104,7 +110,7 @@ const App: React.FC = () => {
 
         {state === 'connecting' && (
           <div style={idleContainerStyle}>
-            <div style={idleContentStyle}>
+            <div style={orbSectionStyle}>
               <VoiceOrb state="connecting" size={120} />
               <p style={letsTalkStyle}>Connecting...</p>
             </div>
@@ -132,13 +138,14 @@ const App: React.FC = () => {
 };
 
 const contentStyle: React.CSSProperties = { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' };
-const idleContainerStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, position: 'relative' };
-const idleContentStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', zIndex: 1, textAlign: 'center', maxWidth: '500px', padding: '16px 20px 0' };
-const agentHeadingStyle: React.CSSProperties = { fontSize: '28px', fontWeight: 600, color: 'var(--fg-1)', margin: 0, lineHeight: '32px' };
-const agentDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: '0 0 16px 0', lineHeight: '20px', maxWidth: '250px' };
-const letsTalkStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: '8px 0 0 0', lineHeight: '20px' };
+const idleContainerStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, position: 'relative' };
+const headingAreaStyle: React.CSSProperties = { textAlign: 'center', padding: '24px 20px 0', zIndex: 1 };
+const orbSectionStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'center', zIndex: 1, textAlign: 'center', padding: '0 20px' };
+const agentHeadingStyle: React.CSSProperties = { fontSize: '24px', fontWeight: 600, color: 'var(--fg-1)', margin: 0, lineHeight: '28px' };
+const agentDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: '4px 0 0 0', lineHeight: '20px' };
+const letsTalkStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: '12px 0 0 0', lineHeight: '20px' };
 const talkDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: 0, maxWidth: '250px', lineHeight: '20px' };
-const startBtnStyle: React.CSSProperties = { marginTop: '24px', padding: '8px 16px', borderRadius: '9999px', border: 'none', background: 'var(--voice-primary)', color: '#fff', fontSize: '16px', fontWeight: 600, cursor: 'pointer', lineHeight: '22px', minWidth: '200px' };
+const startBtnStyle: React.CSSProperties = { marginTop: '24px', padding: '8px 24px', borderRadius: '9999px', border: 'none', background: 'var(--voice-primary)', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', lineHeight: '20px' };
 const startBtnDisabledStyle: React.CSSProperties = { opacity: 0.45, cursor: 'not-allowed' };
 const warningStyle: React.CSSProperties = { fontSize: '12px', color: 'var(--fg-2)', margin: 0 };
 const textModeBottomStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-2)', padding: '0 8px 0 0' };
