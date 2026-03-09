@@ -114,7 +114,7 @@ const barStyle: React.CSSProperties = {
 };
 
 const agentNameStyle: React.CSSProperties = {
-  fontSize: '0.95rem',
+  fontSize: '14px',
   fontWeight: 600,
   color: 'var(--fg-1)',
 };
@@ -133,8 +133,8 @@ const textBtnStyle: React.CSSProperties = {
   border: 'none',
   background: 'transparent',
   color: 'var(--fg-2)',
-  fontSize: '0.9rem',
-  fontWeight: 500,
+  fontSize: '14px',
+  fontWeight: 400,
   cursor: 'pointer',
   borderRadius: '6px',
 };
@@ -174,11 +174,11 @@ const menuItemBase: React.CSSProperties = {
   alignItems: 'center',
   gap: '10px',
   width: '100%',
-  padding: '10px 16px',
+  padding: '8px 16px',
   border: 'none',
   background: 'transparent',
   color: 'var(--fg-1)',
-  fontSize: '0.9rem',
+  fontSize: '14px',
   cursor: 'pointer',
   textDecoration: 'none',
   textAlign: 'left',

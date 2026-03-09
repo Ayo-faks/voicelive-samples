@@ -46,13 +46,13 @@ const textBlockStyle: React.CSSProperties = {
 };
 
 const textLine1Style: React.CSSProperties = {
-  fontSize: '0.75rem',
+  fontSize: '12px',
   fontWeight: 400,
   color: 'var(--fg-3)',
 };
 
 const textLine2Style: React.CSSProperties = {
-  fontSize: '0.85rem',
-  fontWeight: 700,
+  fontSize: '14px',
+  fontWeight: 600,
   color: 'var(--fg-1)',
 };
