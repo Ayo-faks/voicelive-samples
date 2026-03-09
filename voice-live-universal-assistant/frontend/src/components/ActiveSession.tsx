@@ -95,8 +95,9 @@ const orbAreaCompactStyle: React.CSSProperties = {
 };
 
 const statusStyle: React.CSSProperties = {
-  fontSize: '1.1rem',
-  color: 'var(--fg-3)',
+  fontSize: '20px',
+  lineHeight: '20px',
+  color: 'var(--fg-1)',
   margin: 0,
-  fontWeight: 500,
+  fontWeight: 600,
 };

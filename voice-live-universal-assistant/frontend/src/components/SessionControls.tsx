@@ -73,15 +73,15 @@ const barStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  gap: '16px',
-  padding: '20px',
+  gap: '8px',
+  padding: '16px',
   background: 'var(--control-bar-bg)',
   backdropFilter: 'blur(10px)',
 };
 
 const btnStyle: React.CSSProperties = {
-  width: '48px',
-  height: '48px',
+  width: '40px',
+  height: '40px',
   borderRadius: '50%',
   border: '1px solid var(--border-subtle)',
   background: 'var(--surface)',
@@ -90,7 +90,8 @@ const btnStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: 'background 0.2s, border-color 0.2s',
+  transition: 'background 0.12s, border-color 0.12s',
+  padding: '8px',
 };
 
 const activeBtnStyle: React.CSSProperties = {
