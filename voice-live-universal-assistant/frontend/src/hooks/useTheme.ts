@@ -16,7 +16,7 @@ function resolveTheme(pref: ThemePreference): ResolvedTheme {
 export function useTheme() {
   const [preference, setPreference] = useState<ThemePreference>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return (stored as ThemePreference) || 'system';
+    return (stored as ThemePreference) || 'light';
   });
 
   const resolved = resolveTheme(preference);

@@ -66,6 +66,6 @@ const svgStyle: React.CSSProperties = {
 };
 
 const wavePathStyle: React.CSSProperties = {
-  fill: 'var(--voice-primary)',
+  fill: 'var(--fg-3)',
   animation: 'wave-drift 8s ease-in-out infinite',
 };

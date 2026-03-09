@@ -1,100 +1,102 @@
-import React from 'react';
-import type { InputMode } from '../hooks/useUrlParams';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface TopBarProps {
   agentName: string;
-  inputMode: InputMode;
-  onInputModeChange: (mode: InputMode) => void;
   onNewThread: () => void;
   onOpenSettings: () => void;
-  showModeToggle: boolean;
-  showSettings: boolean;
+  showControls: boolean;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
   agentName,
-  inputMode,
-  onInputModeChange,
   onNewThread,
   onOpenSettings,
-  showModeToggle,
-  showSettings,
+  showControls,
 }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [menuOpen]);
+
   return (
     <div style={barStyle}>
-      {/* Left: agent identity */}
-      <div style={leftStyle}>
-        <div style={agentIconStyle}>🤖</div>
-        <span style={agentNameStyle}>{agentName || 'Voice Assistant'}</span>
-      </div>
+      {/* Left: agent name */}
+      <span style={agentNameStyle}>{agentName || 'Voice Assistant'}</span>
 
       {/* Right: controls */}
-      <div style={rightStyle}>
-        {/* Voice / Text toggle */}
-        {showModeToggle && (
-          <div style={toggleContainerStyle}>
-            <button
-              style={{
-                ...toggleBtnStyle,
-                ...(inputMode === 'voice' ? toggleActiveStyle : {}),
-              }}
-              onClick={() => onInputModeChange('voice')}
-              aria-label="Voice mode"
-              title="Voice mode"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                <line x1="12" y1="19" x2="12" y2="23" />
-                <line x1="8" y1="23" x2="16" y2="23" />
-              </svg>
-              <span>Voice</span>
-            </button>
-            <button
-              style={{
-                ...toggleBtnStyle,
-                ...(inputMode === 'text' ? toggleActiveStyle : {}),
-              }}
-              onClick={() => onInputModeChange('text')}
-              aria-label="Text mode"
-              title="Text mode"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              <span>Text</span>
-            </button>
-          </div>
-        )}
-
-        {/* New Thread */}
-        <button
-          style={iconBtnStyle}
-          onClick={onNewThread}
-          aria-label="New thread"
-          title="New thread"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-        </button>
-
-        {/* Settings gear */}
-        {showSettings && (
-          <button
-            style={iconBtnStyle}
-            onClick={onOpenSettings}
-            aria-label="Settings"
-            title="Settings"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      {showControls && (
+        <div style={rightStyle}>
+          {/* New chat */}
+          <button style={textBtnStyle} onClick={onNewThread} aria-label="New chat" title="New chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
             </svg>
+            <span>New chat</span>
           </button>
-        )}
-      </div>
+
+          {/* ··· Menu */}
+          <div ref={menuRef} style={{ position: 'relative' }}>
+            <button
+              style={dotsBtnStyle}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="More options"
+              aria-expanded={menuOpen}
+              title="More options"
+            >
+              ···
+            </button>
+            {menuOpen && (
+              <div style={menuStyle}>
+                <button
+                  style={menuItemStyle}
+                  onClick={() => { setMenuOpen(false); onOpenSettings(); }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                  </svg>
+                  Settings
+                </button>
+                <a style={menuLinkStyle} href="https://aka.ms/aistudio/terms" target="_blank" rel="noopener noreferrer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="17" y1="10" x2="3" y2="10" /><line x1="21" y1="6" x2="3" y2="6" />
+                    <line x1="21" y1="14" x2="3" y2="14" /><line x1="17" y1="18" x2="3" y2="18" />
+                  </svg>
+                  Terms of use
+                  <span style={externalIconStyle}>↗</span>
+                </a>
+                <a style={menuLinkStyle} href="https://go.microsoft.com/fwlink/?linkid=521839" target="_blank" rel="noopener noreferrer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  Privacy
+                  <span style={externalIconStyle}>↗</span>
+                </a>
+                <button style={menuItemStyle} onClick={() => setMenuOpen(false)}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  Send feedback
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -105,25 +107,14 @@ const barStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '12px 20px',
+  padding: '10px 20px',
   borderBottom: '1px solid var(--border-subtle)',
   background: 'var(--bg-2)',
-  position: 'relative',
   zIndex: 10,
 };
 
-const leftStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '10px',
-};
-
-const agentIconStyle: React.CSSProperties = {
-  fontSize: '1.4rem',
-};
-
 const agentNameStyle: React.CSSProperties = {
-  fontSize: '1rem',
+  fontSize: '0.95rem',
   fontWeight: 600,
   color: 'var(--fg-1)',
 };
@@ -131,45 +122,78 @@ const agentNameStyle: React.CSSProperties = {
 const rightStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: '4px',
 };
 
-const toggleContainerStyle: React.CSSProperties = {
-  display: 'flex',
-  border: '1px solid var(--border-subtle)',
-  borderRadius: '8px',
-  overflow: 'hidden',
-};
-
-const toggleBtnStyle: React.CSSProperties = {
+const textBtnStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: '6px',
-  padding: '6px 14px',
+  padding: '6px 12px',
   border: 'none',
   background: 'transparent',
   color: 'var(--fg-2)',
-  fontSize: '0.85rem',
+  fontSize: '0.9rem',
   fontWeight: 500,
   cursor: 'pointer',
-  transition: 'background 0.15s, color 0.15s',
+  borderRadius: '6px',
 };
 
-const toggleActiveStyle: React.CSSProperties = {
-  background: 'var(--brand-blue)',
-  color: '#fff',
-};
-
-const iconBtnStyle: React.CSSProperties = {
+const dotsBtnStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: '36px',
   height: '36px',
-  background: 'none',
   border: '1px solid var(--border-subtle)',
   borderRadius: '8px',
-  color: 'var(--fg-2)',
+  background: 'transparent',
+  color: 'var(--fg-1)',
+  fontSize: '1.2rem',
+  fontWeight: 700,
   cursor: 'pointer',
-  transition: 'background 0.15s, color 0.15s',
+  letterSpacing: '2px',
+};
+
+const menuStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '100%',
+  right: 0,
+  marginTop: '4px',
+  minWidth: '200px',
+  padding: '6px 0',
+  borderRadius: '8px',
+  border: '1px solid var(--border-subtle)',
+  background: 'var(--bg-2)',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+  zIndex: 100,
+};
+
+const menuItemBase: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+  width: '100%',
+  padding: '10px 16px',
+  border: 'none',
+  background: 'transparent',
+  color: 'var(--fg-1)',
+  fontSize: '0.9rem',
+  cursor: 'pointer',
+  textDecoration: 'none',
+  textAlign: 'left',
+};
+
+const menuItemStyle: React.CSSProperties = { ...menuItemBase };
+
+const menuLinkStyle: React.CSSProperties = {
+  ...menuItemBase,
+  textDecoration: 'none',
+  color: 'var(--fg-1)',
+};
+
+const externalIconStyle: React.CSSProperties = {
+  marginLeft: 'auto',
+  fontSize: '0.8rem',
+  color: 'var(--fg-3)',
 };
