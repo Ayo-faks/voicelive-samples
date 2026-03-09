@@ -25,10 +25,10 @@ export const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, size = 120 }) => {
     );
   }
 
-  // Active/connecting: 3 concentric circles (Foundry ratio: 244/182/138 ≈ 1.77x/1.32x/1x)
-  const innerSize = size;
-  const midSize = Math.round(size * 1.32);
-  const outerSize = Math.round(size * 1.77);
+  // Active/connecting: 3 concentric circles (Foundry: 244/182/138 from 120 base)
+  const innerSize = Math.round(size * 1.15);  // 138px from 120
+  const midSize = Math.round(size * 1.52);    // 182px from 120
+  const outerSize = Math.round(size * 2.03);  // 244px from 120
 
   const pulseClass = state === 'listening' || state === 'connecting' ? styles['pulse-listening'] : '';
 

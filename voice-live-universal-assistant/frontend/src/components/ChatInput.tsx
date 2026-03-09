@@ -72,12 +72,12 @@ const barStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   flex: 1,
-  padding: '10px 14px',
-  borderRadius: '10px',
+  padding: '8px 12px',
+  borderRadius: '8px',
   border: '1px solid var(--border-subtle)',
   background: 'var(--bg-1)',
   color: 'var(--fg-1)',
-  fontSize: '0.95rem',
+  fontSize: '14px',
   outline: 'none',
 };
 
@@ -87,7 +87,7 @@ const sendBtnStyle: React.CSSProperties = {
   justifyContent: 'center',
   width: '40px',
   height: '40px',
-  borderRadius: '10px',
+  borderRadius: '8px',
   border: 'none',
   background: 'var(--brand-blue)',
   color: '#fff',

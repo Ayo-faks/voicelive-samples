@@ -1,4 +1,4 @@
-/* ─── Theme: Dark (default) ─── */
+/* ─── Theme: Dark ─── */
 [data-theme="dark"] {
   --bg-1: #292929;
   --bg-2: #1f1f1f;
@@ -17,6 +17,7 @@
   --surface: rgba(255, 255, 255, 0.05);
   --surface-overlay: rgba(255, 255, 255, 0.08);
   --control-bar-bg: rgba(0, 0, 0, 0.3);
+  --wave-color: rgba(255, 255, 255, 0.08);
   --scrollbar-thumb: rgba(255, 255, 255, 0.15);
   --backdrop: rgba(0, 0, 0, 0.5);
   --error: #ef4444;
@@ -31,19 +32,20 @@
   --bg-2: #ffffff;
   --bg-3: #ebebeb;
   --fg-1: #242424;
-  --fg-2: #424242;
-  --fg-3: #616161;
+  --fg-2: #616161;
+  --fg-3: #8a8a8a;
   --voice-primary: #7c5cbf;
   --voice-secondary: #6741b0;
   --voice-glow: rgba(124, 92, 191, 0.35);
   --voice-bg-subtle: rgba(124, 92, 191, 0.1);
   --brand-blue: #005E8B;
   --brand-blue-bg: rgba(0, 94, 139, 0.12);
-  --border: rgba(0, 0, 0, 0.08);
-  --border-subtle: rgba(0, 0, 0, 0.15);
+  --border: rgba(0, 0, 0, 0.12);
+  --border-subtle: rgba(0, 0, 0, 0.08);
   --surface: rgba(0, 0, 0, 0.03);
   --surface-overlay: rgba(0, 0, 0, 0.05);
   --control-bar-bg: rgba(255, 255, 255, 0.85);
+  --wave-color: #d4d4d4;
   --scrollbar-thumb: rgba(0, 0, 0, 0.15);
   --backdrop: rgba(0, 0, 0, 0.3);
   --error: #dc2626;
@@ -125,7 +127,7 @@ input[type="checkbox"] {
 }
 
 /* Badge hover */
-a[aria-label="Built with Azure AI Foundry"]:hover {
+a[aria-label="Built with Microsoft Foundry"]:hover {
   opacity: 1 !important;
 }
 

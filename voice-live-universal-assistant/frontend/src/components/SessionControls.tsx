@@ -27,14 +27,14 @@ export const SessionControls: React.FC<SessionControlsProps> = ({
         aria-label="Toggle closed captions"
         title="Closed captions"
       >
-        <span style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.5px' }}>CC</span>
+        <span style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px' }}>CC</span>
       </button>
 
       {/* Mic Toggle */}
       <button
         style={{
           ...btnStyle,
-          ...(isMuted ? mutedBtnStyle : {}),
+          ...(isMuted ? mutedBtnStyle : micBtnStyle),
         }}
         onClick={onToggleMute}
         aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'}
@@ -102,6 +102,11 @@ const activeBtnStyle: React.CSSProperties = {
 const mutedBtnStyle: React.CSSProperties = {
   background: 'var(--error-bg-subtle)',
   borderColor: 'var(--error)',
+};
+
+const micBtnStyle: React.CSSProperties = {
+  borderColor: 'var(--voice-primary)',
+  color: 'var(--voice-primary)',
 };
 
 const endBtnStyle: React.CSSProperties = {

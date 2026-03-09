@@ -55,13 +55,13 @@ const containerStyle: React.CSSProperties = {
   overflowY: 'auto',
   display: 'flex',
   flexDirection: 'column',
-  gap: '10px',
+  gap: '8px',
   padding: '0 8px',
 };
 
 const bubbleStyle: React.CSSProperties = {
   padding: '12px 16px',
-  borderRadius: '12px',
+  borderRadius: '8px',
   maxWidth: '85%',
 };
 
@@ -74,7 +74,7 @@ const roleStyle: React.CSSProperties = {
 };
 
 const textStyle: React.CSSProperties = {
-  fontSize: '0.95rem',
+  fontSize: '12px',
   color: 'var(--fg-1)',
-  lineHeight: 1.5,
+  lineHeight: 1.4,
 };

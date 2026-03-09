@@ -133,15 +133,15 @@ const App: React.FC = () => {
 
 const contentStyle: React.CSSProperties = { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' };
 const idleContainerStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, position: 'relative' };
-const idleContentStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', zIndex: 1, textAlign: 'center', maxWidth: '500px', padding: '0 20px' };
-const agentHeadingStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: 0, lineHeight: '20px' };
-const agentDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-3)', margin: '0 0 16px 0', lineHeight: '20px' };
+const idleContentStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', zIndex: 1, textAlign: 'center', maxWidth: '500px', padding: '16px 20px 0' };
+const agentHeadingStyle: React.CSSProperties = { fontSize: '28px', fontWeight: 600, color: 'var(--fg-1)', margin: 0, lineHeight: '32px' };
+const agentDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: '0 0 16px 0', lineHeight: '20px', maxWidth: '250px' };
 const letsTalkStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: '8px 0 0 0', lineHeight: '20px' };
-const talkDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-3)', margin: 0, maxWidth: '250px', lineHeight: '20px' };
-const startBtnStyle: React.CSSProperties = { marginTop: '24px', padding: '8px 24px', borderRadius: '999px', border: 'none', background: 'var(--voice-primary)', color: '#fff', fontSize: '16px', fontWeight: 600, cursor: 'pointer', lineHeight: '22px' };
+const talkDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: 0, maxWidth: '250px', lineHeight: '20px' };
+const startBtnStyle: React.CSSProperties = { marginTop: '24px', padding: '8px 16px', borderRadius: '9999px', border: 'none', background: 'var(--voice-primary)', color: '#fff', fontSize: '16px', fontWeight: 600, cursor: 'pointer', lineHeight: '22px', minWidth: '200px' };
 const startBtnDisabledStyle: React.CSSProperties = { opacity: 0.45, cursor: 'not-allowed' };
-const warningStyle: React.CSSProperties = { fontSize: '0.8rem', color: 'var(--fg-3)', margin: 0 };
+const warningStyle: React.CSSProperties = { fontSize: '12px', color: 'var(--fg-2)', margin: 0 };
 const textModeBottomStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-2)', padding: '0 8px 0 0' };
-const endSessionTextStyle: React.CSSProperties = { padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--error)', background: 'var(--error-bg-subtle)', color: 'var(--error)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' };
+const endSessionTextStyle: React.CSSProperties = { padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--error)', background: 'var(--error-bg-subtle)', color: 'var(--error)', fontSize: '14px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' };
 
 export default App;

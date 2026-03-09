@@ -65,10 +65,10 @@ const bubbleRowStyle: React.CSSProperties = {
 
 const bubbleStyle: React.CSSProperties = {
   maxWidth: '75%',
-  padding: '10px 14px',
-  borderRadius: '16px',
-  fontSize: '0.95rem',
-  lineHeight: 1.45,
+  padding: '8px 12px',
+  borderRadius: '8px',
+  fontSize: '14px',
+  lineHeight: 1.4,
   wordBreak: 'break-word',
 };
 

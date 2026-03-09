@@ -689,8 +689,8 @@ const headerStyle: React.CSSProperties = {
 };
 
 const titleStyle: React.CSSProperties = {
-  fontSize: '1.3rem',
-  fontWeight: 700,
+  fontSize: '20px',
+  fontWeight: 600,
   color: 'var(--fg-1)',
   margin: 0,
 };
@@ -710,20 +710,20 @@ const fieldStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: '0.85rem',
-  color: 'var(--fg-3)',
+  fontSize: '14px',
+  color: 'var(--fg-2)',
   marginBottom: '6px',
-  fontWeight: 500,
+  fontWeight: 600,
 };
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '10px 12px',
+  padding: '8px 12px',
   borderRadius: '8px',
   border: '1px solid var(--border-subtle)',
   background: 'var(--surface)',
   color: 'var(--fg-1)',
-  fontSize: '0.9rem',
+  fontSize: '14px',
   outline: 'none',
   boxSizing: 'border-box',
 };
@@ -754,7 +754,7 @@ const segBtnStyle: React.CSSProperties = {
   background: 'var(--surface)',
   color: 'var(--fg-3)',
   cursor: 'pointer',
-  fontSize: '0.9rem',
+  fontSize: '14px',
   fontWeight: 500,
   transition: 'background 0.2s, color 0.2s',
 };
@@ -783,13 +783,13 @@ const checkboxLabelStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
-  fontSize: '0.9rem',
+  fontSize: '14px',
   color: 'var(--fg-1)',
   cursor: 'pointer',
 };
 
 const optionalBadgeStyle: React.CSSProperties = {
-  fontSize: '0.7rem',
+  fontSize: '12px',
   color: 'var(--fg-3)',
   border: '1px solid var(--border)',
   borderRadius: '4px',
