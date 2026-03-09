@@ -146,20 +146,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         {/* Theme picker */}
         <div style={fieldStyle}>
           <label style={labelStyle}>Theme</label>
-          <div style={segmentedStyle}>
-            {(['light', 'dark', 'system'] as ThemePreference[]).map((t) => (
-              <button
-                key={t}
-                style={{
-                  ...segBtnStyle,
-                  ...(theme === t ? segActiveBlueStyle : {}),
-                }}
-                onClick={() => onThemeChange(t)}
-              >
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </button>
-            ))}
-          </div>
+          <select
+            style={inputStyle}
+            value={theme}
+            onChange={(e) => onThemeChange(e.target.value as ThemePreference)}
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
+          </select>
         </div>
 
         <hr style={dividerStyle} />
