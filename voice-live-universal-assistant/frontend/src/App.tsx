@@ -48,7 +48,7 @@ const App: React.FC = () => {
     if (agent) overrides.agentName = agent;
     if (project) overrides.project = project;
     if (greetingDisabled) overrides.proactiveGreeting = false;
-    if (agent || project) overrides.mode = 'agent';
+    if (agent && project) overrides.mode = 'agent';
     if (Object.keys(overrides).length > 0) updateSettings(overrides);
   }, [configLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -57,15 +57,18 @@ const App: React.FC = () => {
     if (urlTheme) setTheme(urlTheme);
   }, [urlTheme, setTheme]);
 
+  const isActive = state === 'connecting' || state === 'listening' || state === 'thinking' || state === 'speaking';
+  const isIdle = state === 'idle' || state === 'ended';
+
   const handleNewThread = () => {
     if (isActive) { stopSession(); }
     resetSession();
   };
 
   const showControls = !isLocked;
-  const isActive = state === 'connecting' || state === 'listening' || state === 'thinking' || state === 'speaking';
-  const isIdle = state === 'idle' || state === 'ended';
   const agentMissingConfig = settings.mode === 'agent' && (!settings.agentName?.trim() || !settings.project?.trim());
+  // In locked mode with missing config, don't block — auto-start may still work with server defaults
+  const startDisabled = agentMissingConfig && !isLocked;
   const agentDisplayName = settings.mode === 'agent' ? (settings.agentName || 'Voice Assistant') : (settings.model || 'Voice Assistant');
   const formatName = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]/g, ' ');
 
@@ -87,14 +90,14 @@ const App: React.FC = () => {
               <h2 style={letsTalkStyle}>Let's talk</h2>
               <p style={talkDescStyle}>Talk like you would to a person. The agent listens and responds.</p>
               <button
-                style={{ ...startBtnStyle, ...(agentMissingConfig ? startBtnDisabledStyle : {}) }}
-                onClick={agentMissingConfig ? undefined : () => startSession()}
-                disabled={agentMissingConfig}
-                title={agentMissingConfig ? 'Agent Name and Project required' : undefined}
+                style={{ ...startBtnStyle, ...(startDisabled ? startBtnDisabledStyle : {}) }}
+                onClick={startDisabled ? undefined : () => startSession()}
+                disabled={startDisabled}
+                title={startDisabled ? 'Agent Name and Project required' : undefined}
               >
                 Start session
               </button>
-              {agentMissingConfig && <p style={warningStyle}>Open Settings to configure Agent Name and Project</p>}
+              {startDisabled && !isLocked && <p style={warningStyle}>Open Settings (···) to configure Agent Name and Project</p>}
             </div>
           </div>
         )}
@@ -112,10 +115,10 @@ const App: React.FC = () => {
           <ActiveSession state={state} transcripts={transcripts} isCCEnabled={isCCEnabled} isMuted={isMuted} onToggleCC={toggleCC} onToggleMute={toggleMute} onEndSession={stopSession} />
         )}
 
-        {isActive && inputMode === 'text' && <ChatMessages transcripts={transcripts} />}
+        {isActive && state !== 'connecting' && inputMode === 'text' && <ChatMessages transcripts={transcripts} />}
       </div>
 
-      {isActive && inputMode === 'text' && (
+      {isActive && state !== 'connecting' && inputMode === 'text' && (
         <div style={textModeBottomStyle}>
           <ChatInput onSend={sendTextMessage} />
           <button style={endSessionTextStyle} onClick={stopSession} aria-label="End session">✕ End</button>

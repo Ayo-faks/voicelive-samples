@@ -1,4 +1,4 @@
-"""Playwright smoke test for the new frontend UX."""
+"""Playwright smoke test for the Foundry-aligned frontend UX."""
 from playwright.sync_api import sync_playwright
 import time
 
@@ -9,7 +9,6 @@ def run_tests():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         passed = 0
-        failed = 0
 
         # Test 1: Basic load
         print("Test 1: Loading http://localhost:8000 ...")
@@ -17,74 +16,72 @@ def run_tests():
         print(f"  Title: {page.title()}")
         passed += 1
 
-        # Test 2: TopBar controls visible
+        # Test 2: TopBar — agent name + New chat + ··· menu
         print("Test 2: TopBar controls ...")
-        assert page.locator('[aria-label="Settings"]').is_visible(), "Settings gear not visible"
-        assert page.locator('[aria-label="New thread"]').is_visible(), "New thread not visible"
-        print("  Settings gear: visible")
-        print("  New thread: visible")
+        assert page.locator("[aria-label='New chat']").is_visible(), "New chat not visible"
+        assert page.locator("[aria-label='More options']").is_visible(), "··· menu not visible"
+        print("  New chat: visible")
+        print("  ··· menu: visible")
         passed += 1
 
-        # Test 3: Voice/Text toggle
-        print("Test 3: Voice/Text toggle ...")
-        assert page.locator("button:has-text('Voice')").is_visible(), "Voice toggle not visible"
-        assert page.locator("button:has-text('Text')").is_visible(), "Text toggle not visible"
-        print("  Voice toggle: visible")
-        print("  Text toggle: visible")
+        # Test 3: ··· menu opens and has Settings
+        print("Test 3: ··· menu dropdown ...")
+        page.locator("[aria-label='More options']").click()
+        time.sleep(0.3)
+        assert page.locator("button:has-text('Settings')").is_visible(), "Settings not in menu"
+        assert page.locator("a:has-text('Terms of use')").is_visible(), "Terms not in menu"
+        assert page.locator("a:has-text('Privacy')").is_visible(), "Privacy not in menu"
+        print("  Settings, Terms, Privacy: visible")
+        # Close menu
+        page.locator("[aria-label='More options']").click()
         passed += 1
 
-        # Test 4: Built with badge
-        print("Test 4: Built with badge ...")
+        # Test 4: Idle state — Start session button + Let's talk
+        print("Test 4: Idle state ...")
+        assert page.locator("button:has-text('Start session')").is_visible(), "Start session not visible"
+        assert page.locator("text=Let's talk").is_visible(), "Let's talk not visible"
+        print("  Start session button: visible")
+        print("  Let's talk: visible")
+        passed += 1
+
+        # Test 5: Built with badge
+        print("Test 5: Built with badge ...")
         assert page.locator("text=Microsoft Foundry").is_visible(), "Badge not visible"
-        print("  Badge: visible")
-        passed += 1
-
-        # Test 5: Agent details shown (idle state has agent icon)
-        print("Test 5: Agent details in idle state ...")
-        page.screenshot(path=f"{SCREENSHOT_DIR}/test-default.png")
         passed += 1
 
         # Test 6: ?lock=true hides controls
         print("Test 6: ?lock=true ...")
         page.goto("http://localhost:8000/?lock=true", wait_until="networkidle")
-        assert not page.locator('[aria-label="Settings"]').is_visible(), "Settings should be hidden"
-        assert not page.locator("button:has-text('Voice')").is_visible(), "Toggle should be hidden"
-        print("  Settings hidden: True")
-        print("  Toggle hidden: True")
-        page.screenshot(path=f"{SCREENSHOT_DIR}/test-locked.png")
+        assert not page.locator("[aria-label='More options']").is_visible(), "Menu should be hidden"
+        assert not page.locator("[aria-label='New chat']").is_visible(), "New chat should be hidden"
+        print("  Controls hidden: True")
         passed += 1
 
-        # Test 7: ?mode=text locks to text
-        print("Test 7: ?mode=text ...")
-        page.goto("http://localhost:8000/?mode=text", wait_until="networkidle")
-        assert not page.locator("button:has-text('Voice')").is_visible(), "Toggle should be hidden"
-        assert page.locator('[aria-label="Settings"]').is_visible(), "Settings should remain"
-        print("  Toggle hidden: True")
-        print("  Settings visible: True")
-        page.screenshot(path=f"{SCREENSHOT_DIR}/test-text-mode.png")
+        # Test 7: ?theme=dark
+        print("Test 7: ?theme=dark ...")
+        page.goto("http://localhost:8000/?theme=dark", wait_until="networkidle")
+        theme = page.evaluate("document.documentElement.getAttribute('data-theme')")
+        assert theme == "dark", f"Expected dark, got {theme}"
+        print(f"  Theme: {theme}")
         passed += 1
 
-        # Test 8: Settings panel opens
-        print("Test 8: Settings panel ...")
+        # Test 8: Settings opens from menu
+        print("Test 8: Settings from menu ...")
         page.goto("http://localhost:8000", wait_until="networkidle")
-        page.locator('[aria-label="Settings"]').click()
+        page.locator("[aria-label='More options']").click()
+        time.sleep(0.3)
+        page.locator("button:has-text('Settings')").click()
         time.sleep(0.5)
-        # Check settings panel appeared (look for "Mode" or theme-related text)
         settings_visible = page.locator("text=Mode").first.is_visible()
         print(f"  Settings panel opened: {settings_visible}")
-        page.screenshot(path=f"{SCREENSHOT_DIR}/test-settings.png")
         passed += 1
 
-        # Test 9: Text mode toggle switches view
-        print("Test 9: Switch to text mode ...")
+        # Screenshot
         page.goto("http://localhost:8000", wait_until="networkidle")
-        page.locator("button:has-text('Text')").click()
-        time.sleep(1)
-        page.screenshot(path=f"{SCREENSHOT_DIR}/test-text-switched.png")
-        passed += 1
+        page.screenshot(path=f"{SCREENSHOT_DIR}/test-foundry-idle.png")
 
         print(f"\n{'='*50}")
-        print(f"Results: {passed} passed, {failed} failed")
+        print(f"Results: {passed} passed, 0 failed")
         print(f"{'='*50}")
 
         browser.close()
