@@ -60,7 +60,7 @@ const App: React.FC = () => {
   }, [urlTheme, setTheme]);
 
   const isActive = state === 'connecting' || state === 'listening' || state === 'thinking' || state === 'speaking';
-  const isIdle = state === 'idle' || state === 'ended';
+  const isIdle = state === 'idle';
 
   const handleNewThread = () => {
     if (isActive) { stopSession(); }
