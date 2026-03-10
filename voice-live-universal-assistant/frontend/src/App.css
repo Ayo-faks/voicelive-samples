@@ -28,24 +28,24 @@
 
 /* ─── Theme: Light ─── */
 [data-theme="light"] {
-  --bg-1: #f5f5f5;
+  --bg-1: #fafafa;
   --bg-2: #ffffff;
-  --bg-3: #ebebeb;
+  --bg-3: #f0f0f0;
   --fg-1: #242424;
-  --fg-2: #616161;
-  --fg-3: #8a8a8a;
+  --fg-2: #707070;
+  --fg-3: #a0a0a0;
   --voice-primary: #7c5cbf;
   --voice-secondary: #6741b0;
   --voice-glow: rgba(124, 92, 191, 0.35);
   --voice-bg-subtle: rgba(124, 92, 191, 0.1);
   --brand-blue: #005E8B;
   --brand-blue-bg: rgba(0, 94, 139, 0.12);
-  --border: rgba(0, 0, 0, 0.12);
-  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.10);
+  --border-subtle: rgba(0, 0, 0, 0.06);
   --surface: rgba(0, 0, 0, 0.03);
   --surface-overlay: rgba(0, 0, 0, 0.05);
   --control-bar-bg: rgba(255, 255, 255, 0.85);
-  --wave-color: #e0e0e0;
+  --wave-color: #d1cdc7;
   --scrollbar-thumb: rgba(0, 0, 0, 0.15);
   --backdrop: rgba(0, 0, 0, 0.3);
   --error: #dc2626;
@@ -68,11 +68,13 @@ html, body, #root {
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--bg-1);
   color: var(--fg-1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 /* Button reset */
