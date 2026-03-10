@@ -63,26 +63,26 @@ body {
   line-height: 20px;
 }
 
-/* Button reset */
-button {
+/* Button reset — only for non-Fluent buttons */
+button:not([class*="fui-"]) {
   font-family: inherit;
 }
 
-button:hover {
+button:not([class*="fui-"]):hover {
   filter: brightness(1.08);
 }
 
-button:active {
+button:not([class*="fui-"]):active {
   transform: scale(0.97);
 }
 
-/* Input/textarea theming */
-input, textarea, select {
+/* Input/textarea theming — only for non-Fluent controls */
+input:not([class*="fui-"]), textarea:not([class*="fui-"]), select:not([class*="fui-"]) {
   font-family: inherit;
 }
 
-input:focus, textarea:focus, select:focus {
-  border-color: var(--brand-blue) !important;
+input:not([class*="fui-"]):focus, textarea:not([class*="fui-"]):focus, select:not([class*="fui-"]):focus {
+  border-color: var(--brand-blue);
   box-shadow: 0 0 0 2px var(--brand-blue-bg);
 }
 

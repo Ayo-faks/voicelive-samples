@@ -18,7 +18,7 @@ def run_tests():
 
         # Test 2: TopBar — agent name + New chat + ··· menu
         print("Test 2: TopBar controls ...")
-        assert page.locator("[aria-label='New chat']").is_visible(), "New chat not visible"
+        assert page.locator("button:has-text('New chat')").is_visible(), "New chat not visible"
         assert page.locator("[aria-label='More options']").is_visible(), "··· menu not visible"
         print("  New chat: visible")
         print("  ··· menu: visible")
@@ -28,9 +28,9 @@ def run_tests():
         print("Test 3: ··· menu dropdown ...")
         page.locator("[aria-label='More options']").click()
         time.sleep(0.3)
-        assert page.locator("button:has-text('Settings')").is_visible(), "Settings not in menu"
-        assert page.locator("a:has-text('Terms of use')").is_visible(), "Terms not in menu"
-        assert page.locator("a:has-text('Privacy')").is_visible(), "Privacy not in menu"
+        assert page.locator("[role='menuitem']:has-text('Settings')").is_visible(), "Settings not in menu"
+        assert page.locator("[role='menuitem']:has-text('Terms of use')").is_visible(), "Terms not in menu"
+        assert page.locator("[role='menuitem']:has-text('Privacy')").is_visible(), "Privacy not in menu"
         print("  Settings, Terms, Privacy: visible")
         # Close menu
         page.locator("[aria-label='More options']").click()
@@ -52,8 +52,8 @@ def run_tests():
         # Test 6: ?lock=true hides controls
         print("Test 6: ?lock=true ...")
         page.goto("http://localhost:8000/?lock=true", wait_until="networkidle")
+        assert not page.locator("button:has-text('New chat')").is_visible(), "New chat should be hidden"
         assert not page.locator("[aria-label='More options']").is_visible(), "Menu should be hidden"
-        assert not page.locator("[aria-label='New chat']").is_visible(), "New chat should be hidden"
         print("  Controls hidden: True")
         passed += 1
 
@@ -70,7 +70,7 @@ def run_tests():
         page.goto("http://localhost:8000", wait_until="networkidle")
         page.locator("[aria-label='More options']").click()
         time.sleep(0.3)
-        page.locator("button:has-text('Settings')").click()
+        page.locator("[role='menuitem']:has-text('Settings')").click()
         time.sleep(0.5)
         settings_visible = page.locator("text=Mode").first.is_visible()
         print(f"  Settings panel opened: {settings_visible}")
