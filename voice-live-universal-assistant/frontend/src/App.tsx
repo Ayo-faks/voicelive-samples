@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FluentProvider, webLightTheme, webDarkTheme, Button } from '@fluentui/react-components';
+import { FluentProvider, Button } from '@fluentui/react-components';
+import { voiceLiveLightTheme, voiceLiveDarkTheme } from './theme';
 import { useVoiceSession } from './hooks/useVoiceSession';
 import { useTheme } from './hooks/useTheme';
 import { useUrlParams } from './hooks/useUrlParams';
@@ -76,7 +77,7 @@ const App: React.FC = () => {
   const formatName = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]/g, ' ');
 
   return (
-    <FluentProvider theme={resolvedTheme === 'dark' ? webDarkTheme : webLightTheme} style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <FluentProvider theme={resolvedTheme === 'dark' ? voiceLiveDarkTheme : voiceLiveLightTheme} style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ErrorBanner message={errorMessage} onDismiss={dismissError} />
       <TopBar agentName={agentDisplayName} onNewThread={handleNewThread} onOpenSettings={() => setSettingsOpen(true)} showControls={showControls} />
 
