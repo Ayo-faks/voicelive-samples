@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@fluentui/react-components';
+import { Button, Text } from '@fluentui/react-components';
 import type { TranscriptEntry } from '../types';
 
 interface SessionEndedViewProps {
@@ -14,18 +14,24 @@ export const SessionEndedView: React.FC<SessionEndedViewProps> = ({
   return (
     <div style={containerStyle}>
       <div style={headerStyle}>
-        <p style={sessionIdStyle}>Session: {sessionId || 'N/A'}</p>
-        <Button appearance="outline" shape="circular" onClick={onNewThread}>New chat</Button>
+        <Text size={200} font="monospace" style={{ color: 'var(--fg-2)' }}>Session: {sessionId || 'N/A'}</Text>
+        <Button appearance="primary" shape="circular" onClick={onNewThread} style={{ minWidth: '120px' }}>
+          New chat
+        </Button>
       </div>
       <div style={transcriptStyle}>
         {transcripts.filter(t => t.isFinal).map((entry, idx) => (
           <div key={idx} style={entryStyle}>
-            <span style={roleStyle}>{entry.role === 'user' ? '👤 You' : '🤖 Agent'}</span>
-            <p style={textStyle}>{entry.text}</p>
+            <Text size={200} weight="semibold" style={{ color: 'var(--fg-2)' }}>
+              {entry.role === 'user' ? '👤 You' : '🤖 Agent'}
+            </Text>
+            <Text size={300}>{entry.text}</Text>
           </div>
         ))}
         {transcripts.filter(t => t.isFinal).length === 0 && (
-          <p style={emptyStyle}>No transcript available for this session.</p>
+          <Text size={300} align="center" style={{ color: 'var(--fg-2)', padding: '20px' }}>
+            No transcript available for this session.
+          </Text>
         )}
       </div>
     </div>
@@ -48,13 +54,6 @@ const headerStyle: React.CSSProperties = {
   marginBottom: '12px',
 };
 
-const sessionIdStyle: React.CSSProperties = {
-  fontSize: '12px',
-  color: 'var(--fg-2)',
-  margin: 0,
-  fontFamily: 'monospace',
-};
-
 const transcriptStyle: React.CSSProperties = {
   flex: 1,
   overflowY: 'auto',
@@ -67,24 +66,4 @@ const entryStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   gap: '2px',
-};
-
-const roleStyle: React.CSSProperties = {
-  fontSize: '12px',
-  fontWeight: 600,
-  color: 'var(--fg-2)',
-};
-
-const textStyle: React.CSSProperties = {
-  fontSize: '14px',
-  lineHeight: '20px',
-  color: 'var(--fg-1)',
-  margin: 0,
-};
-
-const emptyStyle: React.CSSProperties = {
-  fontSize: '14px',
-  color: 'var(--fg-2)',
-  textAlign: 'center',
-  padding: '20px',
 };

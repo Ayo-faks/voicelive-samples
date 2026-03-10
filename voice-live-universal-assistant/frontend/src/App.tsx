@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FluentProvider, Button } from '@fluentui/react-components';
+import { FluentProvider, Button, Text } from '@fluentui/react-components';
 import { voiceLiveLightTheme, voiceLiveDarkTheme } from './theme';
 import { useVoiceSession } from './hooks/useVoiceSession';
 import { useTheme } from './hooks/useTheme';
@@ -71,97 +71,95 @@ const App: React.FC = () => {
 
   const showControls = !isLocked;
   const agentMissingConfig = settings.mode === 'agent' && (!settings.agentName?.trim() || !settings.project?.trim());
-  // In locked mode with missing config, don't block — auto-start may still work with server defaults
   const startDisabled = agentMissingConfig && !isLocked;
   const agentDisplayName = settings.mode === 'agent' ? (settings.agentName || 'Voice Assistant') : (settings.model || 'Voice Assistant');
   const formatName = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]/g, ' ');
 
   return (
-    <FluentProvider theme={resolvedTheme === 'dark' ? voiceLiveDarkTheme : voiceLiveLightTheme} style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <ErrorBanner message={errorMessage} onDismiss={dismissError} />
-      <TopBar agentName={agentDisplayName} onNewThread={handleNewThread} onOpenSettings={() => setSettingsOpen(true)} showControls={showControls} />
+    <FluentProvider theme={resolvedTheme === 'dark' ? voiceLiveDarkTheme : voiceLiveLightTheme} style={{ height: '100vh' }}>
+      <div className="appContainer">
+        <ErrorBanner message={errorMessage} onDismiss={dismissError} />
+        <TopBar agentName={agentDisplayName} onNewThread={handleNewThread} onOpenSettings={() => setSettingsOpen(true)} showControls={showControls} isSessionActive={isActive} />
 
-      <div style={contentStyle}>
-        {isIdle && configLoaded && (
-          <div style={idleContainerStyle}>
-            <Waves paused={false} />
-            {/* Heading area — top of content, not centered */}
-            <div style={headingAreaStyle}>
-              <h1 style={agentHeadingStyle}>{formatName(agentDisplayName)}</h1>
-              <p style={agentDescStyle}>
-                {settings.mode === 'agent'
-                  ? (settings.project ? `${formatName(agentDisplayName)} with ${settings.project} project.` : 'Voice agent ready to assist.')
-                  : 'Talk like you would to a person. The agent listens and responds.'}
-              </p>
-            </div>
-            {/* Orb + labels + button — vertically centered */}
-            <div style={orbSectionStyle}>
-              <VoiceOrb state="idle" />
-              <h2 style={letsTalkStyle}>Let's talk</h2>
-              <p style={talkDescStyle}>Talk like you would to a person. The agent listens and responds.</p>
-              <Button
-                appearance="primary"
-                shape="circular"
-                size="medium"
-                onClick={() => startSession()}
-                disabled={startDisabled}
-                title={startDisabled ? 'Agent Name and Project required' : undefined}
-                style={{ marginTop: '24px' }}
-              >
-                Start session
-              </Button>
-              {startDisabled && !isLocked && <p style={warningStyle}>Open Settings (···) to configure Agent Name and Project</p>}
-            </div>
+        {/* Waves — absolute positioned at bottom, inside container */}
+        {(isIdle || state === 'connecting') && <div className="wavesContainer"><Waves paused={false} /></div>}
+
+        <div className="appContent">
+          <div className="chatbotArea">
+            {isIdle && configLoaded && (
+              <>
+                {/* Agent details area */}
+                <div style={agentDetailsStyle}>
+                  <Text as="h1" weight="semibold" size={400}>{formatName(agentDisplayName)}</Text>
+                  <Text size={300} style={{ color: 'var(--fg-2)' }}>
+                    {settings.mode === 'agent'
+                      ? (settings.project ? `${formatName(agentDisplayName)} with ${settings.project} project.` : 'Voice agent ready to assist.')
+                      : 'Talk like you would to a person. The agent listens and responds.'}
+                  </Text>
+                </div>
+                {/* Voice idle panel */}
+                <div style={idlePanelStyle}>
+                  <VoiceOrb state="idle" />
+                  <div style={idleTitleStyle}>Let's talk</div>
+                  <div style={idleSubtitleStyle}>
+                    Talk like you would to a person. The agent listens and responds.
+                  </div>
+                  <Button
+                    appearance="primary"
+                    shape="circular"
+                    size="medium"
+                    onClick={() => startSession()}
+                    disabled={startDisabled}
+                    title={startDisabled ? 'Agent Name and Project required' : undefined}
+                    style={startButtonStyle}
+                  >
+                    Start session
+                  </Button>
+                  {startDisabled && !isLocked && <Text size={200} style={{ color: 'var(--fg-2)' }}>Open Settings (···) to configure Agent Name and Project</Text>}
+                </div>
+              </>
+            )}
+
+            {state === 'connecting' && (
+              <div style={idlePanelStyle}>
+                <VoiceOrb state="connecting" />
+                <Text weight="semibold" size={400}>Connecting...</Text>
+              </div>
+            )}
+
+            {isActive && state !== 'connecting' && inputMode === 'voice' && (
+              <ActiveSession state={state} transcripts={transcripts} isCCEnabled={isCCEnabled} isMuted={isMuted} onToggleCC={toggleCC} onToggleMute={toggleMute} onEndSession={stopSession} />
+            )}
+
+            {state === 'ended' && (
+              <SessionEndedView sessionId={sessionId} transcripts={transcripts} onNewThread={handleNewThread} />
+            )}
+
+            {isActive && state !== 'connecting' && inputMode === 'text' && <ChatMessages transcripts={transcripts} />}
           </div>
-        )}
 
-        {state === 'connecting' && (
-          <div style={idleContainerStyle}>
-            <div style={orbSectionStyle}>
-              <VoiceOrb state="connecting" />
-              <p style={letsTalkStyle}>Connecting...</p>
-            </div>
-          </div>
-        )}
-
-        {isActive && state !== 'connecting' && inputMode === 'voice' && (
-          <ActiveSession state={state} transcripts={transcripts} isCCEnabled={isCCEnabled} isMuted={isMuted} onToggleCC={toggleCC} onToggleMute={toggleMute} onEndSession={stopSession} />
-        )}
-
-        {state === 'ended' && (
-          <SessionEndedView
-            sessionId={sessionId}
-            transcripts={transcripts}
-            onNewThread={handleNewThread}
-          />
-        )}
-
-        {isActive && state !== 'connecting' && inputMode === 'text' && <ChatMessages transcripts={transcripts} />}
-      </div>
-
-      {isActive && state !== 'connecting' && inputMode === 'text' && (
-        <div style={textModeBottomStyle}>
-          <ChatInput onSend={sendTextMessage} />
-          <button style={endSessionTextStyle} onClick={stopSession} aria-label="End session">✕ End</button>
+          <BuiltWithBadge className="builtWithBadge" />
         </div>
-      )}
 
-      <SettingsPanel isOpen={settingsOpen} settings={settings} onUpdate={updateSettings} onClose={() => setSettingsOpen(false)} azureSpeechLocales={azureSpeechLocales} theme={theme} onThemeChange={setTheme} />
-      <BuiltWithBadge />
+        {isActive && state !== 'connecting' && inputMode === 'text' && (
+          <div style={textModeBottomStyle}>
+            <ChatInput onSend={sendTextMessage} />
+            <Button appearance="outline" shape="circular" onClick={stopSession} aria-label="End session" size="small">✕ End</Button>
+          </div>
+        )}
+
+        <SettingsPanel isOpen={settingsOpen} settings={settings} onUpdate={updateSettings} onClose={() => setSettingsOpen(false)} azureSpeechLocales={azureSpeechLocales} theme={theme} onThemeChange={setTheme} />
+      </div>
     </FluentProvider>
   );
 };
 
-const contentStyle: React.CSSProperties = { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' };
-const idleContainerStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, position: 'relative' };
-const headingAreaStyle: React.CSSProperties = { textAlign: 'center', padding: '24px 20px 0', zIndex: 1 };
-const orbSectionStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'center', zIndex: 1, textAlign: 'center', padding: '0 20px' };
-const agentHeadingStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: 0, lineHeight: '20px' };
-const agentDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: '4px 0 0 0', lineHeight: '20px' };
-const letsTalkStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: '12px 0 0 0', lineHeight: '20px' };
-const talkDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: 0, maxWidth: '250px', lineHeight: '20px' };
-const warningStyle: React.CSSProperties = { fontSize: '12px', color: 'var(--fg-2)', margin: 0 };
-const textModeBottomStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-2)', padding: '0 8px 0 0' };
-const endSessionTextStyle: React.CSSProperties = { padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--error)', background: 'var(--error-bg-subtle)', color: 'var(--error)', fontSize: '14px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' };
+/* Reference-matched styles */
+const agentDetailsStyle: React.CSSProperties = { overflow: 'auto', padding: '0 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '4px', zIndex: 1 };
+const idlePanelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'center', zIndex: 1, textAlign: 'center', padding: '0 24px' };
+const idleTitleStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', marginTop: '8px' };
+const idleSubtitleStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', maxWidth: '250px', textAlign: 'center' };
+const startButtonStyle: React.CSSProperties = { minWidth: '120px', maxWidth: '200px', marginTop: '24px' };
+const textModeBottomStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-2)', padding: '8px' };
 
 export default App;

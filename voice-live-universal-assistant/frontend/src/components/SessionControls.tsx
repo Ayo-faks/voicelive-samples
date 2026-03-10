@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@fluentui/react-components';
+import { Button, tokens } from '@fluentui/react-components';
 import { MicRegular, MicOffRegular } from '@fluentui/react-icons';
 
 // Inline CC icon — no Fluent equivalent
@@ -22,36 +22,40 @@ export const SessionControls: React.FC<SessionControlsProps> = ({
 }) => {
   return (
     <div style={barStyle}>
-      {/* CC Toggle */}
-      <Button
-        appearance={isCCEnabled ? 'primary' : 'subtle'}
-        shape="circular"
-        icon={<ClosedCaptionIcon />}
+      {/* CC Toggle — 40px transparent circular icon button */}
+      <button
         onClick={onToggleCC}
         aria-label="Toggle closed captions"
         title="Closed captions"
-      />
+        style={{
+          ...iconButtonStyle,
+          ...(isCCEnabled ? ccActiveStyle : {}),
+        }}
+      >
+        <ClosedCaptionIcon />
+      </button>
 
-      {/* Mic Toggle */}
-      <Button
-        appearance="outline"
-        shape="circular"
-        icon={isMuted ? <MicOffRegular /> : <MicRegular />}
+      {/* Mic Toggle — 40px brand stroke border, brand foreground */}
+      <button
         onClick={onToggleMute}
         aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'}
         title={isMuted ? 'Unmute' : 'Mute'}
-        style={isMuted ? { borderColor: 'var(--error)', color: 'var(--error)' } : {}}
-      />
+        style={{
+          ...micButtonStyle,
+          ...(isMuted ? micMutedStyle : {}),
+        }}
+      >
+        {isMuted ? <MicOffRegular /> : <MicRegular />}
+      </button>
 
-      {/* End Session */}
-      <Button
-        appearance="outline"
-        shape="circular"
+      {/* End Session — 200px branded pill button */}
+      <button
         onClick={onEndSession}
         aria-label="End session"
+        style={endButtonStyle}
       >
         End session
-      </Button>
+      </button>
     </div>
   );
 };
@@ -62,4 +66,57 @@ const barStyle: React.CSSProperties = {
   alignItems: 'center',
   gap: '8px',
   padding: '16px',
+  flexShrink: 0,
+};
+
+const iconButtonStyle: React.CSSProperties = {
+  width: '40px',
+  height: '40px',
+  borderRadius: '9999px',
+  border: 'none',
+  background: 'transparent',
+  color: 'var(--fg-1)',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '20px',
+};
+
+const ccActiveStyle: React.CSSProperties = {
+  background: 'var(--voice-primary)',
+  color: '#fff',
+};
+
+const micButtonStyle: React.CSSProperties = {
+  width: '40px',
+  height: '40px',
+  borderRadius: '9999px',
+  border: '1px solid var(--brand-fg)',
+  background: 'transparent',
+  color: 'var(--brand-fg)',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '20px',
+};
+
+const micMutedStyle: React.CSSProperties = {
+  background: 'var(--voice-bg-subtle)',
+  borderColor: 'var(--voice-primary)',
+  color: 'var(--voice-primary)',
+};
+
+const endButtonStyle: React.CSSProperties = {
+  width: '200px',
+  height: '40px',
+  borderRadius: '9999px',
+  border: 'none',
+  background: 'var(--bg-2)',
+  color: 'var(--brand-fg)',
+  cursor: 'pointer',
+  fontSize: '14px',
+  fontWeight: 600,
+  fontFamily: 'inherit',
 };

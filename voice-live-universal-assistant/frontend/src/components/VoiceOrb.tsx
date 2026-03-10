@@ -9,34 +9,23 @@ interface VoiceOrbProps {
 export const VoiceOrb: React.FC<VoiceOrbProps> = ({ state }) => {
   const isConnected = state === 'listening' || state === 'thinking' || state === 'speaking' || state === 'connecting';
   const isSpeaking = state === 'speaking';
-  const isListening = state === 'listening';
+  const isListening = state === 'listening' || state === 'connecting';
 
   return (
     <div className={`${styles.pulseContainer} ${isConnected ? styles.connected : styles.disconnected}`}>
-      {isConnected && (
-        <>
-          {/* Outer pulse ring: 228px, opacity 0.2 */}
-          <div
-            className={`${styles.pulse} ${isSpeaking ? styles.pulseMove : ''}`}
-            style={{
-              '--pulse-width': '228px',
-              '--pulse-height': '228px',
-              '--pulse-opacity': '0.2',
-            } as React.CSSProperties}
-          />
-          {/* Inner pulse ring: 190px, opacity 0.3 */}
-          <div
-            className={`${styles.pulse} ${isSpeaking ? styles.pulseMove : ''}`}
-            style={{
-              '--pulse-width': '190px',
-              '--pulse-height': '190px',
-              '--pulse-opacity': '0.3',
-            } as React.CSSProperties}
-          />
-        </>
+      {isConnected ? (
+        <div className={`${styles.circleStack} ${isSpeaking ? styles.stackSpeaking : ''}`}>
+          {/* 3-ring system: outer, middle, inner */}
+          <div className={`${styles.ring} ${styles.ringOuter}`} />
+          <div className={`${styles.ring} ${styles.ringMiddle}`} />
+          <div className={`${styles.ring} ${styles.ringInner}`} />
+          {/* Core circle — opacity 0.33 when active */}
+          <div className={`${styles.circleCore} ${styles.circleCoreActive} ${isListening ? styles.pulseListening : ''}`} />
+        </div>
+      ) : (
+        /* Idle: solid core circle only */
+        <div className={styles.circleCore} />
       )}
-      {/* Core circle: 120px solid */}
-      <div className={`${styles.circleCore} ${isListening || state === 'connecting' ? styles.pulseListening : ''}`} />
     </div>
   );
 };

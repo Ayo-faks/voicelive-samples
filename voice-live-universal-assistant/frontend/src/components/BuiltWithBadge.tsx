@@ -1,11 +1,16 @@
 import React from 'react';
 import { AIFoundryLogo } from './AIFoundryLogo';
 
-export const BuiltWithBadge: React.FC = () => (
+interface BuiltWithBadgeProps {
+  className?: string;
+}
+
+export const BuiltWithBadge: React.FC<BuiltWithBadgeProps> = ({ className }) => (
   <a
     href="https://azure.microsoft.com/en-us/products/ai-foundry"
     target="_blank"
     rel="noopener noreferrer"
+    className={className}
     style={badgeStyle}
     aria-label="Built with Microsoft Foundry"
   >
@@ -20,15 +25,11 @@ export const BuiltWithBadge: React.FC = () => (
 );
 
 const badgeStyle: React.CSSProperties = {
-  position: 'fixed',
-  bottom: '16px',
-  left: '20px',
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
   textDecoration: 'none',
   color: 'var(--fg-2)',
-  zIndex: 5,
   opacity: 0.9,
 };
 

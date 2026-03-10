@@ -15,27 +15,43 @@
   justify-content: flex-end;
 }
 
-.pulse {
+/* 3-ring circleStack system matching reference AudioPulse */
+.circleStack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
   position: absolute;
-  z-index: 1;
-  width: var(--pulse-width);
-  height: var(--pulse-height);
   border-radius: 9999px;
-  opacity: var(--pulse-opacity);
   background: var(--voice-primary);
-  transition: width 0.2s ease-out, height 0.2s ease-out;
+  transition: width 0.3s ease-out, height 0.3s ease-out;
 }
 
-.pulseMove {
-  animation: pulse-move 1.5s ease-in-out infinite;
+/* Outer ring: 244px, opacity 0.20 */
+.ringOuter {
+  width: 244px;
+  height: 244px;
+  opacity: 0.20;
 }
 
-@keyframes pulse-move {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-  100% { transform: scale(1); }
+/* Middle ring: 182px, opacity 0.30 */
+.ringMiddle {
+  width: 182px;
+  height: 182px;
+  opacity: 0.30;
 }
 
+/* Inner ring: 138px, opacity 0.33 */
+.ringInner {
+  width: 138px;
+  height: 138px;
+  opacity: 0.33;
+}
+
+/* Core circle: 120px */
 .circleCore {
   position: relative;
   z-index: 2;
@@ -45,12 +61,37 @@
   background: var(--voice-primary);
 }
 
+/* Active state: core becomes semi-transparent */
+.circleCoreActive {
+  opacity: 0.33;
+}
+
+/* Speaking animation — rings pulsate */
+.stackSpeaking .ring {
+  animation: ring-pulse 1.5s ease-in-out infinite;
+}
+
+.stackSpeaking .ringMiddle {
+  animation-delay: 0.15s;
+}
+
+.stackSpeaking .ringInner {
+  animation-delay: 0.3s;
+}
+
+/* Listening animation — subtle core breathing */
 .pulseListening {
   animation: circle-pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes circle-pulse {
+@keyframes ring-pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+@keyframes circle-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }

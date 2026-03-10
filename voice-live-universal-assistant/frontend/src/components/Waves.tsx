@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
+import { useTheme } from '../hooks/useTheme';
 
 interface WavesProps {
   paused?: boolean;
@@ -8,105 +9,84 @@ interface WaveConfig {
   amplitude: number;
   frequency: number;
   speed: number;
+  colorDark: string;
   colorLight: string;
   baseHeight: number;
   verticalAmplitude: number;
   parallaxFactor: number;
 }
 
+const verticalFreq = 0.02;
+const heightScale = 1;
+const phase = 0;
+const verticalPhase = 0;
+
 const WAVES: WaveConfig[] = [
-  { amplitude: 20, frequency: 0.004, speed: 0.02,  colorLight: 'hsla(0, 0%, 60%, 0.2)', baseHeight: 0.9,  verticalAmplitude: 8,  parallaxFactor: 1   },
-  { amplitude: 15, frequency: 0.007, speed: 0.015, colorLight: 'hsla(0, 0%, 70%, 0.2)', baseHeight: 0.71, verticalAmplitude: 12, parallaxFactor: 0.7 },
-  { amplitude: 12, frequency: 0.01,  speed: 0.01,  colorLight: 'hsla(0, 0%, 80%, 0.2)', baseHeight: 0.6,  verticalAmplitude: 15, parallaxFactor: 0.4 },
+  { amplitude: 20, frequency: 0.004, speed: 0.02,  colorDark: 'hsla(0, 0%, 40%, 0.2)', colorLight: 'hsla(0, 0%, 60%, 0.2)', baseHeight: 0.9,  verticalAmplitude: 8,  parallaxFactor: 1   },
+  { amplitude: 15, frequency: 0.007, speed: 0.015, colorDark: 'hsla(0, 0%, 30%, 0.2)', colorLight: 'hsla(0, 0%, 70%, 0.2)', baseHeight: 0.71, verticalAmplitude: 12, parallaxFactor: 0.7 },
+  { amplitude: 12, frequency: 0.01,  speed: 0.01,  colorDark: 'hsla(0, 0%, 20%, 0.2)', colorLight: 'hsla(0, 0%, 80%, 0.2)', baseHeight: 0.6,  verticalAmplitude: 15, parallaxFactor: 0.4 },
 ];
 
 export const Waves: React.FC<WavesProps> = ({ paused = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastFrameRef = useRef(0);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
-  const drawWave = useCallback((ctx: CanvasRenderingContext2D, wave: WaveConfig, canvasWidth: number, canvasHeight: number, time: number) => {
-    const verticalOffset = Math.sin(time * wave.speed * 0.5) * wave.verticalAmplitude;
-    ctx.fillStyle = wave.colorLight;
+  const drawWave = useCallback((ctx: CanvasRenderingContext2D, wave: WaveConfig, canvasWidth: number, canvasHeight: number, time: number, dark: boolean) => {
+    const verticalOffset = wave.verticalAmplitude * Math.sin(time * verticalFreq * wave.parallaxFactor + verticalPhase);
+    ctx.fillStyle = dark ? wave.colorDark : wave.colorLight;
     ctx.beginPath();
     ctx.moveTo(0, canvasHeight);
-    for (let x = 0; x <= canvasWidth; x++) {
-      const y = canvasHeight * wave.baseHeight + verticalOffset + Math.sin(x * wave.frequency + time * wave.speed * wave.parallaxFactor) * wave.amplitude;
-      ctx.lineTo(x, y);
+    const steps = Math.ceil(canvasWidth);
+    for (let i = 0; i <= steps; i++) {
+      const x = (i / steps) * canvasWidth;
+      const wavePos = x * wave.frequency + time * wave.speed * wave.parallaxFactor + phase;
+      const waveHeight = Math.sin(wavePos) * wave.amplitude * heightScale;
+      const y = canvasHeight * wave.baseHeight + verticalOffset * wave.parallaxFactor + waveHeight;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     }
     ctx.lineTo(canvasWidth, canvasHeight);
+    ctx.lineTo(0, canvasHeight);
     ctx.closePath();
     ctx.fill();
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
+    const container = canvas?.parentElement;
     if (!canvas || !container) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
 
-    const resizeCanvas = () => {
+    const initAnimation = () => {
       const rect = container.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      if (rect) { canvas.width = rect.width; canvas.height = rect.height; }
+      lastFrameRef.current = performance.now();
+      timeRef.current = 0;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      animate();
     };
 
-    const observer = new ResizeObserver(resizeCanvas);
-    observer.observe(container);
-    resizeCanvas();
-
-    const animate = (now: number) => {
-      if (!lastFrameRef.current) lastFrameRef.current = now;
+    const animate = () => {
+      const ctx = canvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+      const now = performance.now();
       const deltaTime = (now - lastFrameRef.current) / 1000;
       lastFrameRef.current = now;
-
-      if (!paused) {
-        timeRef.current += deltaTime * 50;
-      }
-
-      const rect = container.getBoundingClientRect();
-      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-      ctx.clearRect(0, 0, rect.width, rect.height);
-
-      // Draw back to front (reverse order)
-      for (let i = WAVES.length - 1; i >= 0; i--) {
-        drawWave(ctx, WAVES[i], rect.width, rect.height, timeRef.current);
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
+      timeRef.current += deltaTime * 50;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const reversed = [...WAVES].reverse();
+      for (const wave of reversed) drawWave(ctx, wave, canvas.width, canvas.height, timeRef.current, isDark);
+      if (!paused) rafRef.current = requestAnimationFrame(animate);
     };
 
-    rafRef.current = requestAnimationFrame(animate);
+    initAnimation();
+    const resizeObserver = new ResizeObserver(() => initAnimation());
+    resizeObserver.observe(container);
 
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      observer.disconnect();
-    };
-  }, [paused, drawWave]);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); resizeObserver.disconnect(); };
+  }, [paused, drawWave, isDark]);
 
-  return (
-    <div ref={containerRef} style={containerStyle}>
-      <canvas ref={canvasRef} style={canvasStyle} />
-    </div>
-  );
-};
-
-const containerStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: '300px',
-  width: '100%',
-  pointerEvents: 'none',
-  zIndex: 0,
-};
-
-const canvasStyle: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
+  return <canvas ref={canvasRef} aria-hidden style={{ width: '100%', height: '100%' }} />;
 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Menu, MenuTrigger, MenuPopover, MenuList, MenuItem } from '@fluentui/react-components';
+import { Button, Text } from '@fluentui/react-components';
+import { Menu, MenuTrigger, MenuPopover, MenuList, MenuItem } from '@fluentui/react-components';
 import { MoreHorizontalRegular, SettingsRegular, TextAlignLeftRegular, ShieldCheckmarkRegular, PersonFeedbackRegular, ChatAddRegular } from '@fluentui/react-icons';
 
 interface TopBarProps {
@@ -7,6 +8,7 @@ interface TopBarProps {
   onNewThread: () => void;
   onOpenSettings: () => void;
   showControls: boolean;
+  isSessionActive?: boolean;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -14,16 +16,23 @@ export const TopBar: React.FC<TopBarProps> = ({
   onNewThread,
   onOpenSettings,
   showControls,
+  isSessionActive = false,
 }) => {
   return (
     <div style={barStyle}>
-      {/* Left: agent name */}
-      <span style={agentNameStyle}>{agentName || 'Voice Assistant'}</span>
+      {/* Left: agent name with overflow ellipsis */}
+      <div style={leftSectionStyle}>
+        <Text as="h1" weight="semibold" size={300} style={agentNameStyle}>
+          {agentName || 'Voice Assistant'}
+        </Text>
+      </div>
 
       {/* Right: controls */}
       {showControls && (
         <div style={rightStyle}>
-          <Button appearance="subtle" icon={<ChatAddRegular />} onClick={onNewThread}>New chat</Button>
+          <Button appearance="subtle" icon={<ChatAddRegular />} onClick={onNewThread} disabled={isSessionActive}>
+            New chat
+          </Button>
 
           <Menu>
             <MenuTrigger disableButtonEnhancement>
@@ -44,26 +53,36 @@ export const TopBar: React.FC<TopBarProps> = ({
   );
 };
 
-// --- Styles ---
-
 const barStyle: React.CSSProperties = {
   display: 'flex',
+  flexShrink: 0,
   alignItems: 'center',
   justifyContent: 'space-between',
+  boxSizing: 'border-box',
+  width: '100%',
+  maxWidth: '100%',
   padding: '12px 16px',
-  borderBottom: '1px solid var(--border)',
-  background: 'var(--bg-1)',
-  zIndex: 10,
+};
+
+const leftSectionStyle: React.CSSProperties = {
+  overflow: 'hidden',
+  display: 'flex',
+  flex: 1,
+  gap: '12px',
+  alignItems: 'center',
+  minWidth: 0,
 };
 
 const agentNameStyle: React.CSSProperties = {
-  fontSize: '14px',
-  fontWeight: 600,
-  color: 'var(--fg-1)',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  margin: 0,
 };
 
 const rightStyle: React.CSSProperties = {
   display: 'flex',
+  flexShrink: 0,
   alignItems: 'center',
   gap: '8px',
 };
