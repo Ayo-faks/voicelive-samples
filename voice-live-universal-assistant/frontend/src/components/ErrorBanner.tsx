@@ -61,7 +61,7 @@ const closeBtnStyle: React.CSSProperties = {
   border: 'none',
   color: 'rgba(255, 255, 255, 0.7)',
   cursor: 'pointer',
-  fontSize: '1rem',
+  fontSize: '14px',
   padding: '4px 6px',
   flexShrink: 0,
 };

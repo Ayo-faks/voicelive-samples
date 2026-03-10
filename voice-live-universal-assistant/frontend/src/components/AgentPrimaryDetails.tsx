@@ -31,12 +31,12 @@ const containerStyle: React.CSSProperties = {
 };
 
 const iconStyle: React.CSSProperties = {
-  fontSize: '3rem',
+  fontSize: '48px',
   lineHeight: 1,
 };
 
 const nameStyle: React.CSSProperties = {
-  fontSize: '1.4rem',
+  fontSize: '20px',
   fontWeight: 600,
   color: 'var(--fg-1)',
   margin: 0,
@@ -44,8 +44,8 @@ const nameStyle: React.CSSProperties = {
 };
 
 const descStyle: React.CSSProperties = {
-  fontSize: '0.95rem',
-  color: 'var(--fg-3)',
+  fontSize: '14px',
+  color: 'var(--fg-2)',
   margin: 0,
   textAlign: 'center',
   maxWidth: '400px',

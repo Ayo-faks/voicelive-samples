@@ -60,14 +60,14 @@ const containerStyle: React.CSSProperties = {
 };
 
 const bubbleStyle: React.CSSProperties = {
-  padding: '12px 16px',
+  padding: '8px 12px',
   borderRadius: '8px',
   maxWidth: '85%',
 };
 
 const roleStyle: React.CSSProperties = {
-  fontSize: '0.75rem',
-  color: 'var(--fg-3)',
+  fontSize: '12px',
+  color: 'var(--fg-2)',
   display: 'block',
   marginBottom: '4px',
   fontWeight: 600,

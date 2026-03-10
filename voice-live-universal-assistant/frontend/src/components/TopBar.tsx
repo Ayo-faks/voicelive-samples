@@ -91,7 +91,7 @@ const barStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '12px 20px',
+  padding: '12px 16px',
   borderBottom: '1px solid var(--border)',
   background: 'var(--bg-1)',
   zIndex: 10,
@@ -106,7 +106,7 @@ const agentNameStyle: React.CSSProperties = {
 const rightStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '4px',
+  gap: '8px',
 };
 
 const textBtnStyle: React.CSSProperties = {
@@ -116,7 +116,7 @@ const textBtnStyle: React.CSSProperties = {
   padding: '6px 12px',
   border: 'none',
   background: 'transparent',
-  color: 'var(--fg-3)',
+  color: 'var(--fg-2)',
   fontSize: '14px',
   fontWeight: 400,
   cursor: 'pointer',
@@ -134,7 +134,7 @@ const dotsBtnStyle: React.CSSProperties = {
   borderRadius: '50%',
   background: 'transparent',
   color: 'var(--fg-1)',
-  fontSize: '1rem',
+  fontSize: '14px',
   fontWeight: 700,
   cursor: 'pointer',
   letterSpacing: '1px',
@@ -179,6 +179,6 @@ const menuLinkStyle: React.CSSProperties = {
 
 const externalIconStyle: React.CSSProperties = {
   marginLeft: 'auto',
-  fontSize: '0.8rem',
-  color: 'var(--fg-3)',
+  fontSize: '12px',
+  color: 'var(--fg-2)',
 };

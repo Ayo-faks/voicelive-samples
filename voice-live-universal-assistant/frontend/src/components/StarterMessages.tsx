@@ -46,7 +46,7 @@ const cardStyle: React.CSSProperties = {
   border: '1px solid var(--border-subtle)',
   background: 'var(--surface)',
   color: 'var(--fg-2)',
-  fontSize: '0.9rem',
+  fontSize: '14px',
   cursor: 'pointer',
   transition: 'background 0.15s, border-color 0.15s',
   maxWidth: '280px',

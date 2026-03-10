@@ -36,7 +36,7 @@ const logoStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   color: 'var(--fg-1)',
-  fontSize: '1.4rem',
+  fontSize: '22px',
 };
 
 const textBlockStyle: React.CSSProperties = {
@@ -48,7 +48,7 @@ const textBlockStyle: React.CSSProperties = {
 const textLine1Style: React.CSSProperties = {
   fontSize: '12px',
   fontWeight: 400,
-  color: 'var(--fg-3)',
+  color: 'var(--fg-2)',
 };
 
 const textLine2Style: React.CSSProperties = {

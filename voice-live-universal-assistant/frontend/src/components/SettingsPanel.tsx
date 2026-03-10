@@ -377,7 +377,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
 
             <div style={fieldStyle}>
-              <label style={{ ...labelStyle, color: 'var(--fg-3)' }}>
+              <label style={{ ...labelStyle, color: 'var(--fg-2)' }}>
                 Agent Version <span style={optionalBadgeStyle}>optional</span>
               </label>
               <input
@@ -389,7 +389,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
 
             <div style={fieldStyle}>
-              <label style={{ ...labelStyle, color: 'var(--fg-3)' }}>
+              <label style={{ ...labelStyle, color: 'var(--fg-2)' }}>
                 Conversation ID <span style={optionalBadgeStyle}>optional</span>
               </label>
               <input
@@ -401,7 +401,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
 
             <div style={fieldStyle}>
-              <label style={{ ...labelStyle, color: 'var(--fg-3)' }}>
+              <label style={{ ...labelStyle, color: 'var(--fg-2)' }}>
                 Foundry Resource Override <span style={optionalBadgeStyle}>optional</span>
               </label>
               <input
@@ -413,7 +413,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
 
             <div style={fieldStyle}>
-              <label style={{ ...labelStyle, color: 'var(--fg-3)' }}>
+              <label style={{ ...labelStyle, color: 'var(--fg-2)' }}>
                 Auth Identity Client ID <span style={optionalBadgeStyle}>optional</span>
               </label>
               <input
@@ -425,7 +425,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
 
             <div style={fieldStyle}>
-              <label style={{ ...labelStyle, color: 'var(--fg-3)' }}>
+              <label style={{ ...labelStyle, color: 'var(--fg-2)' }}>
                 Speech Input Language <span style={optionalBadgeStyle}>optional</span>
               </label>
               <select
@@ -519,7 +519,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 />
                 Interim Response
                 {isRealtimeModelMode && (
-                  <span style={{ fontSize: '0.75rem', color: 'var(--fg-3)', marginLeft: 6 }}>(text models only)</span>
+                  <span style={{ fontSize: '12px', color: 'var(--fg-2)', marginLeft: 6 }}>(text models only)</span>
                 )}
               </label>
             </div>
@@ -752,7 +752,7 @@ const segBtnStyle: React.CSSProperties = {
   padding: '8px 16px',
   border: 'none',
   background: 'var(--surface)',
-  color: 'var(--fg-3)',
+  color: 'var(--fg-2)',
   cursor: 'pointer',
   fontSize: '14px',
   fontWeight: 500,
@@ -790,7 +790,7 @@ const checkboxLabelStyle: React.CSSProperties = {
 
 const optionalBadgeStyle: React.CSSProperties = {
   fontSize: '12px',
-  color: 'var(--fg-3)',
+  color: 'var(--fg-2)',
   border: '1px solid var(--border)',
   borderRadius: '4px',
   padding: '1px 5px',
