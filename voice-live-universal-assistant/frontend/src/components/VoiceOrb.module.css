@@ -1,42 +1,51 @@
-/* Foundry-aligned voice orb styles */
-
-.orb-container {
+.pulseContainer {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
-/* Idle: solid branded circle */
-.orb-idle {
-  border-radius: 50%;
-  background: var(--voice-primary);
+.connected {
+  min-height: clamp(250px, 40vh, 550px);
 }
 
-/* Active concentric circles — graduated opacity on branded purple */
-.circle-outer,
-.circle-mid,
-.circle-inner {
+.disconnected {
+  justify-content: flex-end;
+}
+
+.pulse {
   position: absolute;
-  border-radius: 50%;
+  z-index: 1;
+  width: var(--pulse-width);
+  height: var(--pulse-height);
+  border-radius: 9999px;
+  opacity: var(--pulse-opacity);
   background: var(--voice-primary);
-  transition: transform 400ms ease, opacity 400ms ease;
+  transition: width 0.2s ease-out, height 0.2s ease-out;
 }
 
-.circle-outer {
-  opacity: 0.20;
+.pulseMove {
+  animation: pulse-move 1.5s ease-in-out infinite;
 }
 
-.circle-mid {
-  opacity: 0.30;
+@keyframes pulse-move {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 
-.circle-inner {
-  opacity: 0.33;
+.circleCore {
+  position: relative;
+  z-index: 2;
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  background: var(--voice-primary);
 }
 
-/* Pulse animation for listening/connecting */
-.pulse-listening {
+.pulseListening {
   animation: circle-pulse 1.8s ease-in-out infinite;
 }
 

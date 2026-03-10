@@ -4,42 +4,39 @@ import styles from './VoiceOrb.module.css';
 
 interface VoiceOrbProps {
   state: SessionState;
-  size?: number;
 }
 
-/**
- * Voice orb matching the Foundry Portal design:
- * - Idle: solid circle (120px default)
- * - Active: 3 concentric circles with graduated opacity + pulse animation
- */
-export const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, size = 120 }) => {
-  const isActive = state === 'listening' || state === 'thinking' || state === 'speaking';
-  const isConnecting = state === 'connecting';
-
-  if (!isActive && !isConnecting) {
-    // Idle: solid circle
-    return (
-      <div className={styles['orb-container']} style={{ width: size, height: size }}>
-        <div className={styles['orb-idle']} style={{ width: size, height: size }} />
-      </div>
-    );
-  }
-
-  // Active/connecting: 3 concentric circles (Foundry: 244/182/138 from 120 base)
-  const innerSize = Math.round(size * 1.15);  // 138px from 120
-  const midSize = Math.round(size * 1.52);    // 182px from 120
-  const outerSize = Math.round(size * 2.03);  // 244px from 120
-
-  const pulseClass = state === 'listening' || state === 'connecting' ? styles['pulse-listening'] : '';
+export const VoiceOrb: React.FC<VoiceOrbProps> = ({ state }) => {
+  const isConnected = state === 'listening' || state === 'thinking' || state === 'speaking' || state === 'connecting';
+  const isSpeaking = state === 'speaking';
+  const isListening = state === 'listening';
 
   return (
-    <div
-      className={`${styles['orb-container']} ${pulseClass}`}
-      style={{ width: outerSize, height: outerSize }}
-    >
-      <div className={styles['circle-outer']} style={{ width: outerSize, height: outerSize }} />
-      <div className={styles['circle-mid']} style={{ width: midSize, height: midSize }} />
-      <div className={styles['circle-inner']} style={{ width: innerSize, height: innerSize }} />
+    <div className={`${styles.pulseContainer} ${isConnected ? styles.connected : styles.disconnected}`}>
+      {isConnected && (
+        <>
+          {/* Outer pulse ring: 228px, opacity 0.2 */}
+          <div
+            className={`${styles.pulse} ${isSpeaking ? styles.pulseMove : ''}`}
+            style={{
+              '--pulse-width': '228px',
+              '--pulse-height': '228px',
+              '--pulse-opacity': '0.2',
+            } as React.CSSProperties}
+          />
+          {/* Inner pulse ring: 190px, opacity 0.3 */}
+          <div
+            className={`${styles.pulse} ${isSpeaking ? styles.pulseMove : ''}`}
+            style={{
+              '--pulse-width': '190px',
+              '--pulse-height': '190px',
+              '--pulse-opacity': '0.3',
+            } as React.CSSProperties}
+          />
+        </>
+      )}
+      {/* Core circle: 120px solid */}
+      <div className={`${styles.circleCore} ${isListening || state === 'connecting' ? styles.pulseListening : ''}`} />
     </div>
   );
 };

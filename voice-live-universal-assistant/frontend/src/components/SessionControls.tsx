@@ -9,108 +9,108 @@ interface SessionControlsProps {
 }
 
 export const SessionControls: React.FC<SessionControlsProps> = ({
-  isCCEnabled,
-  isMuted,
-  onToggleCC,
-  onToggleMute,
-  onEndSession,
+  isCCEnabled, isMuted, onToggleCC, onToggleMute, onEndSession,
 }) => {
   return (
     <div style={barStyle}>
       {/* CC Toggle */}
       <button
-        style={{
-          ...btnStyle,
-          ...(isCCEnabled ? activeBtnStyle : {}),
-        }}
+        style={{ ...iconBtnStyle, ...(isCCEnabled ? ccActiveStyle : {}) }}
         onClick={onToggleCC}
         aria-label="Toggle closed captions"
         title="Closed captions"
       >
-        <span style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px' }}>CC</span>
+        <span style={{ fontSize: '14px', fontWeight: 600 }}>CC</span>
       </button>
 
       {/* Mic Toggle */}
       <button
-        style={{
-          ...btnStyle,
-          ...(isMuted ? mutedBtnStyle : micBtnStyle),
-        }}
+        style={{ ...micBtnStyle, ...(isMuted ? micMutedStyle : {}) }}
         onClick={onToggleMute}
         aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'}
         title={isMuted ? 'Unmute' : 'Mute'}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="9" y="1" width="6" height="12" rx="3" />
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-          <line x1="12" y1="19" x2="12" y2="23" />
-          <line x1="8" y1="23" x2="16" y2="23" />
-          {isMuted && <line x1="1" y1="1" x2="23" y2="23" stroke="var(--error)" strokeWidth="2.5" />}
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 2a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3ZM8 5a2 2 0 1 1 4 0v5a2 2 0 1 1-4 0V5Zm-2 5a.5.5 0 0 0-1 0 5 5 0 0 0 4.5 4.975V16.5a.5.5 0 0 0 1 0v-1.525A5 5 0 0 0 15 10a.5.5 0 0 0-1 0 4 4 0 0 1-8 0Z" />
         </svg>
+        {isMuted && (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ position: 'absolute' }}>
+            <line x1="3" y1="3" x2="17" y2="17" stroke="var(--error)" strokeWidth="2" />
+          </svg>
+        )}
       </button>
 
-      {/* End Session */}
-      <button
-        style={{ ...btnStyle, ...endBtnStyle }}
-        onClick={onEndSession}
-        aria-label="End session"
-        title="End session"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
+      {/* End Session - text button */}
+      <button style={endBtnStyle} onClick={onEndSession} aria-label="End session">
+        End session
       </button>
     </div>
   );
 };
 
 const barStyle: React.CSSProperties = {
-  position: 'fixed',
-  bottom: 0,
-  left: 0,
-  right: 0,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   gap: '8px',
   padding: '16px',
-  background: 'var(--control-bar-bg)',
-  backdropFilter: 'blur(10px)',
 };
 
-const btnStyle: React.CSSProperties = {
-  width: '40px',
-  height: '40px',
-  borderRadius: '50%',
-  border: '1px solid var(--border-subtle)',
-  background: 'var(--surface)',
-  color: 'var(--fg-1)',
-  cursor: 'pointer',
+const iconBtnStyle: React.CSSProperties = {
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: 'background 0.12s, border-color 0.12s',
+  width: '40px',
+  height: '40px',
   padding: '8px',
+  border: 'none',
+  borderRadius: '9999px',
+  background: 'transparent',
+  color: 'var(--fg-2)',
+  cursor: 'pointer',
+  transition: 'background 0.12s, color 0.12s',
 };
 
-const activeBtnStyle: React.CSSProperties = {
+const ccActiveStyle: React.CSSProperties = {
   background: 'var(--brand-blue-bg)',
-  borderColor: 'var(--brand-blue)',
-};
-
-const mutedBtnStyle: React.CSSProperties = {
-  background: 'var(--error-bg-subtle)',
-  borderColor: 'var(--error)',
+  color: 'var(--brand-blue)',
 };
 
 const micBtnStyle: React.CSSProperties = {
-  borderColor: 'var(--voice-primary)',
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '40px',
+  height: '40px',
+  padding: '8px',
+  border: '1px solid var(--voice-primary)',
+  borderRadius: '9999px',
+  background: 'transparent',
   color: 'var(--voice-primary)',
+  cursor: 'pointer',
+  transition: 'all 0.12s ease',
+};
+
+const micMutedStyle: React.CSSProperties = {
+  border: '1px solid var(--voice-primary)',
+  color: 'var(--fg-1)',
+  background: 'var(--bg-3)',
 };
 
 const endBtnStyle: React.CSSProperties = {
-  background: 'var(--error-bg-subtle)',
-  borderColor: 'var(--error)',
-  color: 'var(--error)',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '8px 16px',
+  border: '1px solid var(--border)',
+  borderRadius: '9999px',
+  background: 'var(--bg-2)',
+  color: 'var(--voice-primary)',
+  fontSize: '14px',
+  fontWeight: 600,
+  lineHeight: '20px',
+  cursor: 'pointer',
+  transition: 'background 0.12s, transform 0.12s',
 };

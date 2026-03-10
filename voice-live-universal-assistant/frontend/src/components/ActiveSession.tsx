@@ -43,7 +43,7 @@ export const ActiveSession: React.FC<ActiveSessionProps> = ({
 
       {/* Orb area — shrinks when CC is showing transcripts */}
       <div style={hasTranscripts ? orbAreaCompactStyle : orbAreaStyle}>
-        <VoiceOrb state={state} size={120} />
+        <VoiceOrb state={state} />
         <p style={statusStyle}>{statusTextMap[state] || ''}</p>
       </div>
 
@@ -64,7 +64,7 @@ const containerStyle: React.CSSProperties = {
   alignItems: 'center',
   height: '100%',
   boxSizing: 'border-box',
-  padding: '16px 20px 0 20px',
+  padding: '16px 20px',
 };
 
 const transcriptAreaStyle: React.CSSProperties = {

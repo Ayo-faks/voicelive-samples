@@ -5,6 +5,7 @@ import { useUrlParams } from './hooks/useUrlParams';
 import type { InputMode } from './hooks/useUrlParams';
 import { TopBar } from './components/TopBar';
 import { ActiveSession } from './components/ActiveSession';
+import { SessionEndedView } from './components/SessionEndedView';
 import { ChatMessages } from './components/ChatMessages';
 import { ChatInput } from './components/ChatInput';
 import { Waves } from './components/Waves';
@@ -17,6 +18,7 @@ const App: React.FC = () => {
   const {
     state,
     transcripts,
+    sessionId,
     settings,
     updateSettings,
     startSession,
@@ -92,7 +94,7 @@ const App: React.FC = () => {
             </div>
             {/* Orb + labels + button — vertically centered */}
             <div style={orbSectionStyle}>
-              <VoiceOrb state="idle" size={120} />
+              <VoiceOrb state="idle" />
               <h2 style={letsTalkStyle}>Let's talk</h2>
               <p style={talkDescStyle}>Talk like you would to a person. The agent listens and responds.</p>
               <button
@@ -111,7 +113,7 @@ const App: React.FC = () => {
         {state === 'connecting' && (
           <div style={idleContainerStyle}>
             <div style={orbSectionStyle}>
-              <VoiceOrb state="connecting" size={120} />
+              <VoiceOrb state="connecting" />
               <p style={letsTalkStyle}>Connecting...</p>
             </div>
           </div>
@@ -119,6 +121,14 @@ const App: React.FC = () => {
 
         {isActive && state !== 'connecting' && inputMode === 'voice' && (
           <ActiveSession state={state} transcripts={transcripts} isCCEnabled={isCCEnabled} isMuted={isMuted} onToggleCC={toggleCC} onToggleMute={toggleMute} onEndSession={stopSession} />
+        )}
+
+        {state === 'ended' && (
+          <SessionEndedView
+            sessionId={sessionId}
+            transcripts={transcripts}
+            onNewThread={handleNewThread}
+          />
         )}
 
         {isActive && state !== 'connecting' && inputMode === 'text' && <ChatMessages transcripts={transcripts} />}
