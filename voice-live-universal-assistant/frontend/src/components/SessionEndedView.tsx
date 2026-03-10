@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@fluentui/react-components';
 import type { TranscriptEntry } from '../types';
 
 interface SessionEndedViewProps {
@@ -14,7 +15,7 @@ export const SessionEndedView: React.FC<SessionEndedViewProps> = ({
     <div style={containerStyle}>
       <div style={headerStyle}>
         <p style={sessionIdStyle}>Session: {sessionId || 'N/A'}</p>
-        <button style={newChatBtnStyle} onClick={onNewThread}>New chat</button>
+        <Button appearance="outline" shape="circular" onClick={onNewThread}>New chat</Button>
       </div>
       <div style={transcriptStyle}>
         {transcripts.filter(t => t.isFinal).map((entry, idx) => (
@@ -52,17 +53,6 @@ const sessionIdStyle: React.CSSProperties = {
   color: 'var(--fg-2)',
   margin: 0,
   fontFamily: 'monospace',
-};
-
-const newChatBtnStyle: React.CSSProperties = {
-  padding: '6px 16px',
-  borderRadius: '9999px',
-  border: '1px solid var(--border)',
-  background: 'var(--bg-2)',
-  color: 'var(--voice-primary)',
-  fontSize: '14px',
-  fontWeight: 600,
-  cursor: 'pointer',
 };
 
 const transcriptStyle: React.CSSProperties = {

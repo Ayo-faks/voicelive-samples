@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { Button } from '@fluentui/react-components';
+import { SendRegular } from '@fluentui/react-icons';
 
 interface ChatInputProps {
   onSend: (text: string) => void;
@@ -42,21 +44,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         style={inputStyle}
         aria-label="Message input"
       />
-      <button
+      <Button
+        appearance="primary"
+        shape="square"
+        icon={<SendRegular />}
         onClick={handleSend}
         disabled={disabled || !text.trim()}
-        style={{
-          ...sendBtnStyle,
-          opacity: disabled || !text.trim() ? 0.4 : 1,
-        }}
         aria-label="Send message"
         title="Send"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13" />
-          <polygon points="22 2 15 22 11 13 2 9 22 2" />
-        </svg>
-      </button>
+      />
     </div>
   );
 };
@@ -79,18 +75,4 @@ const inputStyle: React.CSSProperties = {
   color: 'var(--fg-1)',
   fontSize: '14px',
   outline: 'none',
-};
-
-const sendBtnStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '40px',
-  height: '40px',
-  borderRadius: '8px',
-  border: 'none',
-  background: 'var(--brand-blue)',
-  color: '#fff',
-  cursor: 'pointer',
-  transition: 'opacity 0.15s',
 };

@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { Button } from '@fluentui/react-components';
+import { DismissRegular } from '@fluentui/react-icons';
 
 interface ErrorBannerProps {
   message: string | null;
@@ -23,9 +25,14 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({ message, onDismiss }) 
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
       <span style={textStyle}>{message}</span>
-      <button style={closeBtnStyle} onClick={onDismiss} aria-label="Dismiss error">
-        ✕
-      </button>
+      <Button
+        appearance="subtle"
+        size="small"
+        icon={<DismissRegular />}
+        onClick={onDismiss}
+        aria-label="Dismiss error"
+        style={{ color: 'rgba(255, 255, 255, 0.7)', flexShrink: 0 }}
+      />
     </div>
   );
 };
@@ -54,14 +61,4 @@ const textStyle: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: 1.4,
   flex: 1,
-};
-
-const closeBtnStyle: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  color: 'rgba(255, 255, 255, 0.7)',
-  cursor: 'pointer',
-  fontSize: '14px',
-  padding: '4px 6px',
-  flexShrink: 0,
 };

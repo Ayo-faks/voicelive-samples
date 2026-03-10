@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FluentProvider, webLightTheme, webDarkTheme, Button } from '@fluentui/react-components';
 import { useVoiceSession } from './hooks/useVoiceSession';
 import { useTheme } from './hooks/useTheme';
 import { useUrlParams } from './hooks/useUrlParams';
@@ -36,7 +37,7 @@ const App: React.FC = () => {
     setInputModeRef,
   } = useVoiceSession();
 
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const { lockedMode, isLocked, agent, project, theme: urlTheme, greetingDisabled } = useUrlParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [inputMode, setInputMode] = useState<InputMode>(lockedMode ?? 'voice');
@@ -75,7 +76,7 @@ const App: React.FC = () => {
   const formatName = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]/g, ' ');
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <FluentProvider theme={resolvedTheme === 'dark' ? webDarkTheme : webLightTheme} style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ErrorBanner message={errorMessage} onDismiss={dismissError} />
       <TopBar agentName={agentDisplayName} onNewThread={handleNewThread} onOpenSettings={() => setSettingsOpen(true)} showControls={showControls} />
 
@@ -97,14 +98,17 @@ const App: React.FC = () => {
               <VoiceOrb state="idle" />
               <h2 style={letsTalkStyle}>Let's talk</h2>
               <p style={talkDescStyle}>Talk like you would to a person. The agent listens and responds.</p>
-              <button
-                style={{ ...startBtnStyle, ...(startDisabled ? startBtnDisabledStyle : {}) }}
-                onClick={startDisabled ? undefined : () => startSession()}
+              <Button
+                appearance="primary"
+                shape="circular"
+                size="medium"
+                onClick={() => startSession()}
                 disabled={startDisabled}
                 title={startDisabled ? 'Agent Name and Project required' : undefined}
+                style={{ marginTop: '24px' }}
               >
                 Start session
-              </button>
+              </Button>
               {startDisabled && !isLocked && <p style={warningStyle}>Open Settings (···) to configure Agent Name and Project</p>}
             </div>
           </div>
@@ -143,7 +147,7 @@ const App: React.FC = () => {
 
       <SettingsPanel isOpen={settingsOpen} settings={settings} onUpdate={updateSettings} onClose={() => setSettingsOpen(false)} azureSpeechLocales={azureSpeechLocales} theme={theme} onThemeChange={setTheme} />
       <BuiltWithBadge />
-    </div>
+    </FluentProvider>
   );
 };
 
@@ -155,8 +159,6 @@ const agentHeadingStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 6
 const agentDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: '4px 0 0 0', lineHeight: '20px' };
 const letsTalkStyle: React.CSSProperties = { fontSize: '20px', fontWeight: 600, color: 'var(--fg-1)', margin: '12px 0 0 0', lineHeight: '20px' };
 const talkDescStyle: React.CSSProperties = { fontSize: '14px', color: 'var(--fg-2)', margin: 0, maxWidth: '250px', lineHeight: '20px' };
-const startBtnStyle: React.CSSProperties = { marginTop: '24px', padding: '8px 24px', borderRadius: '9999px', border: 'none', background: 'var(--voice-primary)', color: '#fff', fontSize: '16px', fontWeight: 600, cursor: 'pointer', lineHeight: '22px' };
-const startBtnDisabledStyle: React.CSSProperties = { opacity: 0.45, cursor: 'not-allowed' };
 const warningStyle: React.CSSProperties = { fontSize: '12px', color: 'var(--fg-2)', margin: 0 };
 const textModeBottomStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-2)', padding: '0 8px 0 0' };
 const endSessionTextStyle: React.CSSProperties = { padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--error)', background: 'var(--error-bg-subtle)', color: 'var(--error)', fontSize: '14px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' };

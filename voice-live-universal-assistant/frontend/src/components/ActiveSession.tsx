@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from '@fluentui/react-components';
 import type { SessionState, TranscriptEntry } from '../types';
 import { VoiceOrb } from './VoiceOrb';
 import { SessionControls } from './SessionControls';
@@ -44,7 +45,7 @@ export const ActiveSession: React.FC<ActiveSessionProps> = ({
       {/* Orb area — shrinks when CC is showing transcripts */}
       <div style={hasTranscripts ? orbAreaCompactStyle : orbAreaStyle}>
         <VoiceOrb state={state} />
-        <p style={statusStyle}>{statusTextMap[state] || ''}</p>
+        <Text weight="semibold" size={400}>{statusTextMap[state] || ''}</Text>
       </div>
 
       <SessionControls
@@ -92,12 +93,4 @@ const orbAreaCompactStyle: React.CSSProperties = {
   gap: '16px',
   padding: '16px 0',
   flexShrink: 0,
-};
-
-const statusStyle: React.CSSProperties = {
-  fontSize: '20px',
-  lineHeight: '20px',
-  color: 'var(--fg-1)',
-  margin: 0,
-  fontWeight: 600,
 };
