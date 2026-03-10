@@ -1,80 +1,112 @@
-import React from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 
 interface WavesProps {
   paused?: boolean;
 }
 
-/**
- * Animated SVG waves background — matches Foundry Portal's agentPreview waves.
- * Pauses animation when chat has messages (paused prop).
- */
+interface WaveConfig {
+  amplitude: number;
+  frequency: number;
+  speed: number;
+  colorLight: string;
+  baseHeight: number;
+  verticalAmplitude: number;
+  parallaxFactor: number;
+}
+
+const WAVES: WaveConfig[] = [
+  { amplitude: 20, frequency: 0.004, speed: 0.02,  colorLight: 'hsla(0, 0%, 60%, 0.2)', baseHeight: 0.9,  verticalAmplitude: 8,  parallaxFactor: 1   },
+  { amplitude: 15, frequency: 0.007, speed: 0.015, colorLight: 'hsla(0, 0%, 70%, 0.2)', baseHeight: 0.71, verticalAmplitude: 12, parallaxFactor: 0.7 },
+  { amplitude: 12, frequency: 0.01,  speed: 0.01,  colorLight: 'hsla(0, 0%, 80%, 0.2)', baseHeight: 0.6,  verticalAmplitude: 15, parallaxFactor: 0.4 },
+];
+
 export const Waves: React.FC<WavesProps> = ({ paused = false }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timeRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const lastFrameRef = useRef(0);
+
+  const drawWave = useCallback((ctx: CanvasRenderingContext2D, wave: WaveConfig, canvasWidth: number, canvasHeight: number, time: number) => {
+    const verticalOffset = Math.sin(time * wave.speed * 0.5) * wave.verticalAmplitude;
+    ctx.fillStyle = wave.colorLight;
+    ctx.beginPath();
+    ctx.moveTo(0, canvasHeight);
+    for (let x = 0; x <= canvasWidth; x++) {
+      const y = canvasHeight * wave.baseHeight + verticalOffset + Math.sin(x * wave.frequency + time * wave.speed * wave.parallaxFactor) * wave.amplitude;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(canvasWidth, canvasHeight);
+    ctx.closePath();
+    ctx.fill();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+
+    const observer = new ResizeObserver(resizeCanvas);
+    observer.observe(container);
+    resizeCanvas();
+
+    const animate = (now: number) => {
+      if (!lastFrameRef.current) lastFrameRef.current = now;
+      const deltaTime = (now - lastFrameRef.current) / 1000;
+      lastFrameRef.current = now;
+
+      if (!paused) {
+        timeRef.current += deltaTime * 50;
+      }
+
+      const rect = container.getBoundingClientRect();
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      // Draw back to front (reverse order)
+      for (let i = WAVES.length - 1; i >= 0; i--) {
+        drawWave(ctx, WAVES[i], rect.width, rect.height, timeRef.current);
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      observer.disconnect();
+    };
+  }, [paused, drawWave]);
+
   return (
-    <div style={containerStyle}>
-      <svg
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none"
-        style={svgStyle}
-      >
-        <path
-          d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,218.7C672,213,768,171,864,165.3C960,160,1056,192,1152,197.3C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          style={{
-            ...wavePathStyle,
-            opacity: 0.5,
-            animationPlayState: paused ? 'paused' : 'running',
-          }}
-        />
-        <path
-          d="M0,288L48,272C96,256,192,224,288,218.7C384,213,480,235,576,245.3C672,256,768,256,864,234.7C960,213,1056,171,1152,165.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          style={{
-            ...wavePathStyle,
-            opacity: 0.35,
-            animationDelay: '-2s',
-            animationPlayState: paused ? 'paused' : 'running',
-          }}
-        />
-        <path
-          d="M0,256L48,250.7C96,245,192,235,288,224C384,213,480,203,576,208C672,213,768,235,864,240C960,245,1056,235,1152,218.7C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          style={{
-            ...wavePathStyle,
-            opacity: 0.25,
-            animationDelay: '-4s',
-            animationPlayState: paused ? 'paused' : 'running',
-          }}
-        />
-      </svg>
-      <style>{keyframes}</style>
+    <div ref={containerRef} style={containerStyle}>
+      <canvas ref={canvasRef} style={canvasStyle} />
     </div>
   );
 };
-
-const keyframes = `
-@keyframes wave-drift {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-25px); }
-  100% { transform: translateX(0); }
-}
-`;
 
 const containerStyle: React.CSSProperties = {
   position: 'absolute',
   bottom: 0,
   left: 0,
   right: 0,
-  height: '30%',
+  height: '300px',
+  width: '100%',
   pointerEvents: 'none',
-  overflow: 'hidden',
   zIndex: 0,
 };
 
-const svgStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: 0,
+const canvasStyle: React.CSSProperties = {
   width: '100%',
   height: '100%',
-};
-
-const wavePathStyle: React.CSSProperties = {
-  fill: 'var(--wave-color)',
-  animation: 'wave-drift 8s ease-in-out infinite',
 };
