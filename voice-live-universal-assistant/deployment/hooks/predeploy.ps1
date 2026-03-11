@@ -40,8 +40,13 @@ Write-Host ""
 $dockerAvailable = $null -ne (Get-Command docker -ErrorAction SilentlyContinue)
 $dockerRunning = $false
 if ($dockerAvailable) {
-    docker info *>$null
-    $dockerRunning = ($LASTEXITCODE -eq 0)
+    try {
+        docker info *>$null
+        $dockerRunning = ($LASTEXITCODE -eq 0)
+    } catch {
+        Write-Host "Local Docker command is not usable; falling back to ACR cloud build..."
+        $dockerRunning = $false
+    }
 }
 
 if ($dockerRunning) {
