@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, tokens } from '@fluentui/react-components';
 import { MicRegular, MicOffRegular } from '@fluentui/react-icons';
 
 // Inline CC icon — no Fluent equivalent
@@ -21,102 +20,94 @@ export const SessionControls: React.FC<SessionControlsProps> = ({
   isCCEnabled, isMuted, onToggleCC, onToggleMute, onEndSession,
 }) => {
   return (
-    <div style={barStyle}>
-      {/* CC Toggle — 40px transparent circular icon button */}
-      <button
-        onClick={onToggleCC}
-        aria-label="Toggle closed captions"
-        title="Closed captions"
-        style={{
-          ...iconButtonStyle,
-          ...(isCCEnabled ? ccActiveStyle : {}),
-        }}
-      >
+    <div style={actionBarStyle}>
+      {/* CC — .iconButton: 40px transparent icon-only, always neutral, no active fill */}
+      <button onClick={onToggleCC} aria-label="Toggle closed captions" title="Closed captions" style={iconButtonStyle}>
         <ClosedCaptionIcon />
       </button>
 
-      {/* Mic Toggle — 40px brand stroke border, brand foreground */}
+      {/* Mic — .micOnlyButton: 40px brand-bordered icon-only, neutral bg */}
       <button
         onClick={onToggleMute}
         aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'}
         title={isMuted ? 'Unmute' : 'Mute'}
-        style={{
-          ...micButtonStyle,
-          ...(isMuted ? micMutedStyle : {}),
-        }}
+        style={isMuted ? { ...micButtonStyle, ...mutedActiveStyle } : micButtonStyle}
       >
         {isMuted ? <MicOffRegular /> : <MicRegular />}
       </button>
 
-      {/* End Session — 200px branded pill button */}
-      <button
-        onClick={onEndSession}
-        aria-label="End session"
-        style={endButtonStyle}
-      >
+      {/* End — .endButton: min-200px pill, neutral bg, brand text, thin border */}
+      <button onClick={onEndSession} aria-label="End session" style={endButtonStyle}>
         End session
       </button>
     </div>
   );
 };
 
-const barStyle: React.CSSProperties = {
+/* Reference: .actionBar — gap: spacingS (8px), centered */
+const actionBarStyle: React.CSSProperties = {
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
   gap: '8px',
+  alignItems: 'center',
+  justifyContent: 'center',
   padding: '16px',
   flexShrink: 0,
 };
 
+/* Reference: .iconButton — 40x40, transparent, no border, neutralFg2 */
 const iconButtonStyle: React.CSSProperties = {
   width: '40px',
   height: '40px',
-  borderRadius: '9999px',
+  padding: '8px',
   border: 'none',
+  borderRadius: 'var(--borderRadiusCircular, 9999px)',
+  color: 'var(--colorNeutralForeground2, var(--fg-2))',
   background: 'transparent',
-  color: 'var(--fg-1)',
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: '20px',
+  fontFamily: 'inherit',
 };
 
-const ccActiveStyle: React.CSSProperties = {
-  background: 'var(--voice-primary)',
-  color: '#fff',
-};
-
+/* Reference: .micOnlyButton — 40x40, brand border, brandFg1, neutral bg1 */
 const micButtonStyle: React.CSSProperties = {
   width: '40px',
   height: '40px',
-  borderRadius: '9999px',
-  border: '1px solid var(--brand-fg)',
-  background: 'transparent',
-  color: 'var(--brand-fg)',
+  padding: '8px',
+  border: '1px solid var(--colorBrandBackground, var(--voice-primary))',
+  borderRadius: 'var(--borderRadiusCircular, 9999px)',
+  color: 'var(--colorBrandForeground1, var(--voice-primary))',
+  background: 'var(--colorNeutralBackground1, var(--bg-2))',
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: '20px',
+  fontFamily: 'inherit',
+  transition: 'all 120ms ease',
 };
 
-const micMutedStyle: React.CSSProperties = {
-  background: 'var(--voice-bg-subtle)',
-  borderColor: 'var(--voice-primary)',
-  color: 'var(--voice-primary)',
+/* Reference: .mutedActive — neutral bg3, neutral fg1, brand stroke border */
+const mutedActiveStyle: React.CSSProperties = {
+  border: '1px solid var(--colorBrandStroke1, var(--voice-primary))',
+  color: 'var(--colorNeutralForeground1, var(--fg-1))',
+  background: 'var(--colorNeutralBackground3, var(--bg-3))',
 };
 
+/* Reference: .endButton — 20% width, min-200px, neutral bg1, brand text, border */
 const endButtonStyle: React.CSSProperties = {
-  width: '200px',
+  width: '20%',
+  minWidth: '200px',
   height: '40px',
-  borderRadius: '9999px',
-  border: 'none',
-  background: 'var(--bg-2)',
-  color: 'var(--brand-fg)',
+  padding: '8px 16px',
+  border: '1px solid var(--colorNeutralStroke1, var(--border))',
+  borderRadius: 'var(--borderRadiusCircular, 9999px)',
+  color: 'var(--colorBrandForeground1, var(--voice-primary))',
+  background: 'var(--colorNeutralBackground1, var(--bg-2))',
   cursor: 'pointer',
   fontSize: '14px',
   fontWeight: 600,
   fontFamily: 'inherit',
+  lineHeight: '22px',
+  transition: 'background 120ms ease, transform 120ms ease',
 };

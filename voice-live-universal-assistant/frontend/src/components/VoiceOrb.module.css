@@ -15,79 +15,102 @@
   justify-content: flex-end;
 }
 
-/* 3-ring circleStack system matching reference AudioPulse */
+/* ─── Reference: .circleWrapper — sizes the area for the ring system ─── */
+.circleWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 244px;
+  height: 244px;
+}
+
+.circleWrapperIdle {
+  width: 120px;
+  height: 120px;
+}
+
+/* ─── Reference: .circleStack — positions concentric rings ─── */
 .circleStack {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 244px;
+  height: 244px;
 }
 
-.ring {
+/* ─── Concentric rings: shared base ─── */
+.circleOuter,
+.circleMid,
+.circleInner {
   position: absolute;
-  border-radius: 9999px;
-  background: var(--voice-primary);
-  transition: width 0.3s ease-out, height 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--borderRadiusCircular, 9999px);
+  background: var(--colorBrandBackground, var(--voice-primary));
+  transition: transform 400ms ease, opacity 400ms ease;
 }
 
-/* Outer ring: 244px, opacity 0.20 */
-.ringOuter {
+/* Reference: .circleOuter — 244px, opacity 0.20 */
+.circleOuter {
   width: 244px;
   height: 244px;
   opacity: 0.20;
 }
 
-/* Middle ring: 182px, opacity 0.30 */
-.ringMiddle {
+/* Reference: .circleMid — 182px, opacity 0.30 */
+.circleMid {
   width: 182px;
   height: 182px;
   opacity: 0.30;
 }
 
-/* Inner ring: 138px, opacity 0.33 */
-.ringInner {
+/* Reference: .circleInner — 138px, opacity 0.33 */
+.circleInner {
   width: 138px;
   height: 138px;
   opacity: 0.33;
 }
 
-/* Core circle: 120px */
-.circleCore {
+/* ─── Reference: .circleBase (active core) — 160px, opacity 0.33 ─── */
+.circleBase {
   position: relative;
   z-index: 2;
+  width: 160px;
+  height: 160px;
+  border-radius: var(--borderRadiusCircular, 9999px);
+  opacity: 0.33;
+  background: var(--colorBrandBackground, var(--voice-primary));
+}
+
+/* ─── Reference: .circleBaseIdle — 120px, solid, no opacity ─── */
+.circleBaseIdle {
   width: 120px;
   height: 120px;
-  border-radius: 9999px;
-  background: var(--voice-primary);
+  border-radius: var(--borderRadiusCircular, 9999px);
+  background: var(--colorBrandBackground, var(--voice-primary));
 }
 
-/* Active state: core becomes semi-transparent */
-.circleCoreActive {
-  opacity: 0.33;
-}
+/* ─── Reference: .stackListening — rings at scale(1), static ─── */
+.stackListening .circleOuter { transform: scale(1); }
+.stackListening .circleMid { transform: scale(1); }
+.stackListening .circleInner { transform: scale(1); }
 
-/* Speaking animation — rings pulsate */
-.stackSpeaking .ring {
-  animation: ring-pulse 1.5s ease-in-out infinite;
-}
+/* ─── Reference: .stackTalking — reduced ring opacities ─── */
+.stackTalking .circleOuter { opacity: calc(0.20 * 0.9); }
+.stackTalking .circleMid { opacity: calc(0.30 * 0.87); }
+.stackTalking .circleInner { opacity: 0.5; }
 
-.stackSpeaking .ringMiddle {
-  animation-delay: 0.15s;
-}
-
-.stackSpeaking .ringInner {
-  animation-delay: 0.3s;
-}
-
-/* Listening animation — subtle core breathing */
+/* ─── Reference: .pulseListening — subtle core breathing ─── */
 .pulseListening {
   animation: circle-pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes ring-pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-  100% { transform: scale(1); }
+/* ─── Reference: .captionsActiveHiddenCircle — hide when CC active ─── */
+.captionsActiveHidden .circleWrapper {
+  display: none;
 }
 
 @keyframes circle-pulse {

@@ -35,17 +35,20 @@ export const ActiveSession: React.FC<ActiveSessionProps> = ({
 
   return (
     <div style={containerStyle}>
-      {/* Transcript takes available space above the orb, scrollable */}
+      {/* Transcript area — above the orb when CC is on */}
       {hasTranscripts && (
         <div style={transcriptAreaStyle}>
           <TranscriptOverlay transcripts={transcripts} />
         </div>
       )}
 
-      {/* Orb area — shrinks when CC is showing transcripts */}
+      {/* Orb area — reference hides circle when captions are active */}
       <div style={hasTranscripts ? orbAreaCompactStyle : orbAreaStyle}>
-        <VoiceOrb state={state} />
-        <Text weight="semibold" size={400}>{statusTextMap[state] || ''}</Text>
+        <VoiceOrb state={state} captionsActive={hasTranscripts} />
+        {/* Status text — reference: Subtitle2 preset */}
+        <Text weight="semibold" size={400} style={{ color: 'var(--colorNeutralForeground1, var(--fg-1))' }}>
+          {statusTextMap[state] || ''}
+        </Text>
       </div>
 
       <SessionControls
@@ -59,13 +62,15 @@ export const ActiveSession: React.FC<ActiveSessionProps> = ({
   );
 };
 
+/* Reference: .panelRoot — centered, full height, gap spacingXL (20px) */
 const containerStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   height: '100%',
   boxSizing: 'border-box',
-  padding: '16px 20px',
+  gap: '20px',
+  justifyContent: 'center',
 };
 
 const transcriptAreaStyle: React.CSSProperties = {
@@ -73,8 +78,8 @@ const transcriptAreaStyle: React.CSSProperties = {
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  minHeight: 0,       // allow flex shrink for overflow
-  overflow: 'hidden',  // children handle their own scroll
+  minHeight: 0,
+  overflow: 'hidden',
 };
 
 const orbAreaStyle: React.CSSProperties = {
